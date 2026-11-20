@@ -108,3 +108,20 @@ used).
 - INT: dense firing (median ~40 spikes / 1 s)
 
 Next: calibrate within the Fig-13 ranges (X gH/gCaT/gSK, INT->X, X->INT) for the X criterion, and the RA burst width.
+
+## Calibration round 1 (2026-11-20)
+
+- **Grid** (81 runs): X gCaT, gH, gSK × INT->X, within the Fig 13 ranges → `results/grid_x1.jsonl`
+- **Random search** (200 runs): all 12 adjustable values uniform within the Fig 13 ranges, plus
+  switches D-01 and D-03 → `results/random1.jsonl`. 0 errors; 199/200 propagate through all 120
+  RA in order.
+- **Capacitance scan** (9 runs): X Cm 100/50/25 pF × INT Cm 75/37.5/18.75 pF (Cm is a BD gap,
+  I-01) → `code/scripts/cm_scan.py`
+
+| Finding | Detail |
+|---|---|
+| **RA: reproducible within ranges** | Up to 104-111/120 RA meet the paper's criterion (one burst, 3-6 spikes, ≤ 10 ms). Burst duration is driven by gSK@RA (r = −0.77), gA@RA (−0.41) and g_RA_RA (+0.46). Example: gA 12.8, gSK 12.0 → 3.95 spikes, 9.1 ms, 2.1 ms per link. |
+| **X: NOT reproducible within ranges** | In all 290 runs the median HVC(X) "burst" is **1 spike** (paper: 1-4 bursts of 4-9 spikes; Fig 7B, Fig 10). 0-3/50 X meet the criterion at best; 11-24 X stay silent. Unchanged by Cm, bT exponent or αh. |
+| **INT firing too sparse** | Median 14-25 spikes per 400 ms (up to ~80 with Cm/4) vs Fig 7A bursts of 5-30 spikes at very high rate. Main driver: g_RA_INT (r = +0.82). |
+| **Mechanistic reading** | The T-current availability gate rT has τ ≈ τr0 + τr1 = 287.5 ms at all physiological V (θrrT = +68 mV puts the sigmoid in saturation). At X rest (−62.5 mV) rT ≈ 0.1, so bT ≈ 0.03. The brief (~5-20 ms) IPSPs in the network can't de-inactivate ICaT, so X rebounds with one spike. Daou13's slice data (long current steps) don't test this regime. |
+| **Candidate causes (to test)** | (1) sign of θrrT (Terman 2002 convention), (2) φrT, (3) X resting potential (more negative rest → rT available), (4) θaT −64/−65, (5) RTF, (6) INT drive structure, (7) a difference only the original code can reveal (Phase 2) |
