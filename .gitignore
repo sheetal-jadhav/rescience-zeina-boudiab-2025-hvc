@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+# Third-party material: copyrighted PDFs, other authors' code, and figures that include
+# non-CC-BY panels. Kept locally, never published with this repo.
+reference/
+# Bou Diab's original code stays out of the history until Phase 2 (independence protocol)
+original-code-DO-NOT-OPEN-UNTIL-PHASE-2/
