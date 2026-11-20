@@ -136,3 +136,16 @@ Next: calibrate within the Fig-13 ranges (X gH/gCaT/gSK, INT->X, X->INT) for the
   26.7, T-03, T-06. **Code contradicts the text:** D-01 (+50), D-04 (−65), the presence of
   I_Nap/I_KNa, RA gK/gA values, RA gCaT.
 - **Everything network-level remains OPEN**: not determinable from the published material.
+
+## Search for the network code elsewhere (2026-11-20)
+None found. Searched:
+- ModelDB (API search "HVC": no Bou Diab/Daou network model)
+- GitHub: repo search ("HVC network Daou", "Bou Diab HVC", "zebra finch HVC model"); the
+  `daoulab` account's 3 repos (none HVC); `rbertram/birdsong`, which is Ross et al. 2017
+  eNeuro, a 3-neuron network, not this paper
+- Zenodo, Figshare, OSF
+- bioRxiv preprint v1 (2024-11-17) and v2 (2025-08-22): both say "Source codes … will be made
+  available online at our lab's website as well as on ModelDB"
+- Daou lab website `sites.aub.edu.lb/daoulab/software/` (only SongSeq, the 2012 song-analysis
+  tool)
+- A web search
