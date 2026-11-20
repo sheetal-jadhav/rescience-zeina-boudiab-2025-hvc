@@ -1,0 +1,87 @@
+% DRAFT. Sections marked TODO are filled once the corresponding runs finish.
+% Sources for every number: ../notes/replication-results.md, ../notes/phase1-report.md,
+% ../notes/phase2-report.md, ../notes/issues-log.md, ../results/*.jsonl
+
+\section*{Introduction}
+
+Bou Diab, Chammas and Daou\supercite{BouDiab2025} proposed a conductance-based network model of
+the songbird premotor nucleus HVC. It combines the three main HVC classes: projection neurons
+to RA (HVC\textsubscript{RA}), projection neurons to Area X (HVC\textsubscript{X}) and
+interneurons (HVC\textsubscript{INT}). The single-cell models come from Daou et
+al.\supercite{Daou2013}, and the synaptic currents are kinetic AMPA and GABA\textsubscript{A}
+synapses\supercite{Destexhe1994}. The network is a feed-forward chain of 20 microcircuits with
+structured feedback inhibition. It reproduces the ultra-sparse, time-locked bursting of
+HVC\textsubscript{RA} neurons\supercite{Hahnloser2002}, the 1--4 rebound bursts of
+HVC\textsubscript{X} neurons\supercite{Kozhevnikov2007} and dense interneuron firing, and it
+identifies intrinsic currents ($I_A$, $I_{SK}$, $I_{CaT}$, $I_H$) whose up- or down-regulation in
+single neurons breaks sequence propagation.
+
+The original simulations were run in MATLAB. Here we report an independent reimplementation in
+Python (NumPy/SciPy\supercite{Virtanen2020}) written from the article text. We followed a
+three-phase protocol designed to document independence: (1) text and cited sources only;
+(2) comparison with the authors' supplementary code.
+
+\section*{Methods}
+
+\subsection*{Independence protocol}
+Phase~1 used only the article (text, Appendix~1, figures) and the papers it cites for the
+single-cell models: Daou et al.\supercite{Daou2013} and that paper's own published code (Bertram
+lab website). The authors' supplementary code was downloaded but left unopened. SHA-256
+checksums were recorded and a git tag (\texttt{phase1-complete}) was set before Phase~2.
+Every parameter carries a source tag (article, Daou 2013 text, Daou 2013 code, or our choice) in
+the code and in the reproducibility notes.
+
+\subsection*{Model}
+TODO: equations as implemented (Table), with the corrections listed in
+Table~\ref{tab:issues}.
+
+\subsection*{Implementation}
+The model is a single vectorised ODE system (8 gating/state variables per neuron plus one
+variable per synapse; 2487 variables for the default network). It is integrated with SciPy's
+Dormand--Prince RK45\supercite{Dormand1980} (the method of MATLAB \texttt{ode45}) at MATLAB's
+default tolerances (rtol $10^{-3}$, atol $10^{-6}$), or with fixed-step RK4. Network
+construction follows the article's rules, with the open choices listed in
+Table~\ref{tab:issues}. Code: TODO (repository URL).
+
+\subsection*{Parameters not given in the article}
+TODO: summary of the calibration within the Fig.~13 ranges (290 runs) and the frozen
+configuration.
+
+\section*{Results}
+
+\subsection*{Sequence propagation (Fig.~4)}
+TODO: 50-seed statistics. Phase-1 16-seed values: 16/16 networks propagate through all 120
+HVC\textsubscript{RA} in order; $3.97\pm0.11$ spikes per burst (original $4.76\pm0.48$),
+$9.17\pm0.38$\,ms burst duration (original $8.12\pm0.89$).
+
+\subsection*{Inter-burst delay (Fig.~5)}
+Reproduced in direction: increasing $g_{AMPA}$ shortens the delay (10$\rightarrow$12\,nS:
+5.56$\rightarrow$4.61\,ms) and increasing $g_A$ lengthens it. Magnitudes differ: the $g_A$
+effect is $\sim$0.2\,ms (original bars $\sim$3.4$\rightarrow$7\,ms), and the postsynaptic burst
+has 1--2 spikes (original $\sim$6). The Fig.~5A legend contradicts the text on the direction of
+the $g_{AMPA}$ effect.
+
+\subsection*{Single-neuron perturbations (Figs.~6, 9, 11)}
+TODO: table from \texttt{notes/replication-results.md}.
+
+\subsection*{HVC\textsubscript{X} and interneuron firing (Figs.~7, 8, 10, 12)}
+Not reproduced. TODO: describe; include the HVC\textsubscript{X} rate-limit result.
+
+\subsection*{Parameter ranges (Fig.~13)}
+TODO.
+
+\subsection*{Robustness}
+TODO: solver comparison, seeds, noise threshold, HVC\textsubscript{X} ablation.
+
+\section*{Discussion}
+TODO.
+
+\section*{Reproducibility notes}
+\begin{table}[h]
+\caption{Gaps, apparent typos and inconsistencies found during replication (summary; the full
+log is in the repository). TODO: final selection.}
+\label{tab:issues}
+\end{table}
+
+\section*{Acknowledgements}
+TODO.

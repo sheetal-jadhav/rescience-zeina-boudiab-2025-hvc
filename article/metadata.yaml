@@ -1,0 +1,83 @@
+# To be filled by the author(s) at the time of submission
+# -------------------------------------------------------
+
+# Title of the article:
+#  - For a successful replication, it should be prefixed with "[Re]"
+#  - For a failed replication, it should be prefixed with "[¬Re]"
+#  TODO(author): decide [Re] vs [¬Re] for a partial replication (see notes/replication-results.md)
+title: "[Re] Biophysical network modeling of temporal and stereotyped sequence propagation of neural activity in the premotor nucleus HVC"
+
+authors:
+  - name: Sheetal Jadhav
+    orcid: TODO
+    email: TODO
+    affiliations: 1,*
+
+affiliations:
+  - code:    1
+    name:    TODO
+    address: TODO
+
+keywords: rescience c, replication, songbird, HVC, Hodgkin-Huxley, sequence generation, python
+
+code:
+  - url: TODO (public GitHub repository)
+  - doi:
+  - swh:
+
+data:
+  - url:
+  - doi:
+
+replication:
+ - cite: "Bou Diab Z, Chammas M, Daou A (2025). Biophysical network modeling of temporal and stereotyped sequence propagation of neural activity in the premotor nucleus HVC. eLife 14:RP105526."
+ - bib:  BouDiab2025
+ - url:  https://elifesciences.org/articles/105526
+ - doi:  10.7554/eLife.105526
+
+abstract: "TODO: write last."
+
+bibliography: bibliography.bib
+
+type: Replication
+
+domain: Computational Neuroscience
+
+language: Python
+
+# To be filled by the author(s) after acceptance
+# -----------------------------------------------------------------------------
+
+# For example, the URL of the GitHub issue where review actually occured
+review: 
+  - url: 
+
+contributors:
+  - name:
+    orcid: 
+    role: editor
+  - name:
+    orcid:
+    role: reviewer
+  - name:
+    orcid:
+    role: reviewer
+
+# This information will be provided by the editor
+dates:
+  - received:  November 1, 2018
+  - accepted:
+  - published: 
+
+# This information will be provided by the editor
+article:
+  - number: # Article number will be automatically assigned during publication
+  - doi:    # DOI from Zenodo
+  - url:    # Final PDF URL (Zenodo or rescience website?)
+
+# This information will be provided by the editor
+journal:
+  - name:   "ReScience C"
+  - issn:   2430-3658
+  - volume: 4
+  - issue:  1
