@@ -46,6 +46,7 @@ class Cells:
         self.N = len(self.types)
         for name in ("Cm", "gNa", "gK", "gL", "gCaL", "gA", "gSK", "gCaT", "gH", "kr"):
             setattr(self, name, np.array([getattr(CELL_TYPES[t], name) for t in self.types]))
+        self.Ibias = np.zeros(self.N)  # constant injected current (pA); 0 in the published model
         for name, values in (overrides or {}).items():
             getattr(self, name)[:] = values
 
@@ -133,7 +134,7 @@ class Model:
 
         dy = np.empty_like(y)
         d = dy[: N_GATES * N].reshape(N_GATES, N)
-        d[V_] = (-I_ion - I_syn + I_app) / self.c.Cm
+        d[V_] = (-I_ion - I_syn + I_app + self.c.Ibias) / self.c.Cm
         d[N_] = (_sig(V, p.theta_n, p.sigma_n) - n) / tau_n
         d[H_] = (a_h / (a_h + b_h) - h) / p.tau_h
         d[E_] = (_sig(V, p.theta_e, p.sigma_e) - e) / p.tau_e

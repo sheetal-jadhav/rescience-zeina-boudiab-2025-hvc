@@ -8,19 +8,24 @@ import numpy as np
 from .analysis import bursts, burst_stats, ra_criteria, spike_times, x_criteria
 from .model import Model, pulses
 from .network import build
-from .params import NetworkSpec, Switches
+from .params import Gating, NetworkSpec, Switches, SynapseKinetics
 from .sim import run_rk45, settle
 
 
 def simulate(spec=NetworkSpec(), seed=0, overrides=None, switches=Switches(), t_end=400.0,
-             kick=(50.0, 60.0, 500.0), rtol=1e-3):
-    """Build, settle, kick RA1 and run. `overrides` maps Cells attribute -> {type: value}."""
+             kick=(50.0, 60.0, 500.0), rtol=1e-3, gating=None, kinetics=None):
+    """Build, settle, kick RA1 and run. `overrides` maps Cells attribute -> {type: value};
+    `gating`/`kinetics` are field overrides for Gating/SynapseKinetics (exploratory only)."""
     net = build(spec, seed=seed)
+    if kinetics:
+        s = net.synapses
+        net.synapses = type(s)(s.pre, s.post, s.g, s.kind, replace(SynapseKinetics(), **kinetics))
     for name, per_type in (overrides or {}).items():
         arr = getattr(net.cells, name)
         for typ, val in per_type.items():
             arr[net.cells.types == typ] = val
-    m = Model(net.cells, net.synapses, switches=switches)
+    m = Model(net.cells, net.synapses, gating=replace(Gating(), **(gating or {})),
+              switches=switches)
     y0 = settle(m, m.initial_state(), 500.0)
     m.stimulus = pulses(net.cells.N, [(net.first_ra, *kick)])
     r = run_rk45(m, y0, t_end, rtol=rtol)

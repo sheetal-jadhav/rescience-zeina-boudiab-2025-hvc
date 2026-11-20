@@ -149,3 +149,23 @@ None found. Searched:
 - Daou lab website `sites.aub.edu.lb/daoulab/software/` (only SongSeq, the 2012 song-analysis
   tool)
 - A web search
+
+## Exploratory: minimal-sufficient-change study (2026-11-20; NOT replication)
+`code/scripts/minimal_change.py` → `results/minimal_change.jsonl` (72 runs, 4 seeds each, Phase-1
+config, one change at a time).
+
+**Result: no single change produces HVC(X) bursts**, even far outside the published values.
+The median spikes per X burst stays at 1 throughout.
+- **H1, T-current recovery 2-20× faster:** single spikes, then silence.
+- **H2, X bias current −25 to −150 pA:** single spikes, then silence.
+- **H3, RA->INT 60-135 nS (range ≤ 45):** INT doubles to 48 spikes but X is unchanged.
+- **H4a, INT->X 60-240 nS (range ≤ 42):** X unchanged.
+- **H4b, GABA decay 11-44 ms (published 5.6):** X unchanged; RA chain degrades.
+
+**The RA chain survives all of them** (71/72 runs).
+
+**Interpretation:** the limit is the X *cell* model, not network drive. With BD/Daou X
+parameters (gK 80 nS, no I_KNa), X can't fire above ~160 Hz (f-I test), whereas Fig 10 shows
+X rebound bursts of ~5 spikes in ~10 ms (~500 Hz). The published X burst phenotype implies an
+X cell different from the one specified in the text plus Daou 2013. Next: single-cell X
+rebound tests (which intrinsic parameters allow high-frequency rebound bursts).

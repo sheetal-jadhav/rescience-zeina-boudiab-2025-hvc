@@ -24,9 +24,13 @@ TYPES = {"RA": RA, "X": X, "INT": INT}
 
 
 def run(point, seed=0):
-    g, overrides, sw = dict(SYNAPSE_G), {}, {}
+    g, overrides, sw, gating, kin = dict(SYNAPSE_G), {}, {}, {}, {}
     for k, v in point.items():
-        if k.startswith("g_"):
+        if k.startswith("gt_"):
+            gating[k[3:]] = v
+        elif k.startswith("kin_"):
+            kin[k[4:]] = v
+        elif k.startswith("g_"):
             a, b = k[2:].split("_")
             g[(a, b)] = v
         elif k.startswith("sw_"):
@@ -37,7 +41,7 @@ def run(point, seed=0):
     t0 = time.time()
     try:
         net, r, sp = simulate(NetworkSpec(g=g), seed=seed, overrides=overrides,
-                              switches=with_switches(**sw))
+                              switches=with_switches(**sw), gating=gating, kinetics=kin)
         s = score(net, sp)
     except Exception as e:
         s = {"error": repr(e)}
