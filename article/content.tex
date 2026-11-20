@@ -1,86 +1,252 @@
-% DRAFT. Sections marked TODO are filled once the corresponding runs finish.
-% Sources for every number: ../notes/replication-results.md, ../notes/phase1-report.md,
-% ../notes/phase2-report.md, ../notes/issues-log.md, ../results/*.jsonl
+% Numbers: ../notes/replication-results.md; raw data: ../results/*.jsonl; figures made by
+% ../code/scripts/article_figures.py and make_figures.py. Remaining TODOs are marked.
 
 \section*{Introduction}
 
 Bou Diab, Chammas and Daou\supercite{BouDiab2025} proposed a conductance-based network model of
-the songbird premotor nucleus HVC. It combines the three main HVC classes: projection neurons
-to RA (HVC\textsubscript{RA}), projection neurons to Area X (HVC\textsubscript{X}) and
-interneurons (HVC\textsubscript{INT}). The single-cell models come from Daou et
-al.\supercite{Daou2013}, and the synaptic currents are kinetic AMPA and GABA\textsubscript{A}
-synapses\supercite{Destexhe1994}. The network is a feed-forward chain of 20 microcircuits with
-structured feedback inhibition. It reproduces the ultra-sparse, time-locked bursting of
-HVC\textsubscript{RA} neurons\supercite{Hahnloser2002}, the 1--4 rebound bursts of
-HVC\textsubscript{X} neurons\supercite{Kozhevnikov2007} and dense interneuron firing, and it
-identifies intrinsic currents ($I_A$, $I_{SK}$, $I_{CaT}$, $I_H$) whose up- or down-regulation in
-single neurons breaks sequence propagation.
+the songbird premotor nucleus HVC. It combines HVC\textsubscript{RA} and HVC\textsubscript{X}
+projection neurons with interneurons (HVC\textsubscript{INT}). The single-cell models come from
+Daou et al.\supercite{Daou2013}, and the synapses are kinetic AMPA and GABA\textsubscript{A}
+synapses\supercite{Destexhe1994}. A feed-forward chain of 20 microcircuits with structured
+inhibition reproduces the ultra-sparse HVC\textsubscript{RA} bursts seen in
+vivo\supercite{Hahnloser2002}, the 1--4 rebound bursts of HVC\textsubscript{X}
+neurons\supercite{Kozhevnikov2007} and dense interneuron firing. Single-neuron changes in $I_A$,
+$I_{SK}$, $I_{CaT}$ or $I_H$ break the sequence.
 
-The original simulations were run in MATLAB. Here we report an independent reimplementation in
-Python (NumPy/SciPy\supercite{Virtanen2020}) written from the article text. We followed a
-three-phase protocol designed to document independence: (1) text and cited sources only;
-(2) comparison with the authors' supplementary code.
+We reimplemented the model independently in Python from the article text, and report which
+results can be reproduced.
 
 \section*{Methods}
 
 \subsection*{Independence protocol}
-Phase~1 used only the article (text, Appendix~1, figures) and the papers it cites for the
-single-cell models: Daou et al.\supercite{Daou2013} and that paper's own published code (Bertram
-lab website). The authors' supplementary code was downloaded but left unopened. SHA-256
-checksums were recorded and a git tag (\texttt{phase1-complete}) was set before Phase~2.
-Every parameter carries a source tag (article, Daou 2013 text, Daou 2013 code, or our choice) in
-the code and in the reproducibility notes.
+We worked in two phases, each closed by a git tag before the next began:
+\begin{enumerate}
+\item \textbf{Text only.} The article (text, Appendix~1, figures) and the papers it cites for the
+  single-cell models: Daou et al.\supercite{Daou2013} and that paper's published code. The
+  authors' supplementary code was downloaded but left unopened, with its SHA-256 checksums
+  recorded (tag \texttt{phase1-complete}).
+\item \textbf{Comparison with the supplementary code} (tag \texttt{phase2-complete}).
+\end{enumerate}
+Every parameter is tagged in the code with its source: the article, Daou 2013 text, Daou 2013
+code, or our choice.
 
-\subsection*{Model}
-TODO: equations as implemented (Table), with the corrections listed in
-Table~\ref{tab:issues}.
+\subsection*{Model and corrections}
+The equations follow Appendix~1 of the original, with the corrections in
+Table~\ref{tab:issues}. These come from the Daou et al.\ paper and code, or are required for
+physically meaningful behaviour. The most consequential is the potassium activation time
+constant. With the printed constant $\tau_n = 10$\,ms, every action potential is
+$\sim$10\,ms wide and HVC\textsubscript{RA} cannot burst. The voltage-dependent form of Daou et
+al.\ restores normal spikes.
 
 \subsection*{Implementation}
-The model is a single vectorised ODE system (8 gating/state variables per neuron plus one
-variable per synapse; 2487 variables for the default network). It is integrated with SciPy's
-Dormand--Prince RK45\supercite{Dormand1980} (the method of MATLAB \texttt{ode45}) at MATLAB's
-default tolerances (rtol $10^{-3}$, atol $10^{-6}$), or with fixed-step RK4. Network
-construction follows the article's rules, with the open choices listed in
-Table~\ref{tab:issues}. Code: TODO (repository URL).
+The network is one vectorised ODE system of 2487 variables. It is integrated with SciPy's
+Dormand--Prince RK45\supercite{Dormand1980,Virtanen2020}, the method behind MATLAB
+\texttt{ode45}, at rtol $10^{-6}$ and atol $10^{-9}$. These tolerances are tighter than
+MATLAB's defaults; see Robustness. Fixed-step RK4 is used for comparison and for noise. The
+network is built by the article's rules. Open choices are listed in Table~\ref{tab:issues}:
+\begin{itemize}
+\item per-microcircuit counts are sampled to sum to 120/50/50;
+\item interneuron inputs are drawn from the whole HVC\textsubscript{RA} pool;
+\item the sequence starts with a 500\,pA, 10\,ms pulse into the first HVC\textsubscript{RA}.
+\end{itemize}
+Code: TODO (repository URL).
 
 \subsection*{Parameters not given in the article}
-TODO: summary of the calibration within the Fig.~13 ranges (290 runs) and the frozen
-configuration.
+The article gives the variable conductances only as allowed ranges (Fig.~13). We sampled 200
+configurations uniformly inside those ranges and kept the one maximising
+\[
+N_{RA,\text{ok}} - 20\,|\bar{n}_\text{spk} - 4.76| - 10\,|\bar{d}_\text{burst} - 8.12\,\text{ms}|,
+\]
+where $N_{RA,\text{ok}}$ counts HVC\textsubscript{RA} that fire one burst of 3--6 spikes lasting
+at most 10\,ms (the article's criterion). The objective uses HVC\textsubscript{RA} only, because
+no sampled configuration met the HVC\textsubscript{X} criterion.
 
 \section*{Results}
 
-\subsection*{Sequence propagation (Fig.~4)}
-TODO: 50-seed statistics. Phase-1 16-seed values: 16/16 networks propagate through all 120
-HVC\textsubscript{RA} in order; $3.97\pm0.11$ spikes per burst (original $4.76\pm0.48$),
-$9.17\pm0.38$\,ms burst duration (original $8.12\pm0.89$).
+Figures~\ref{fig:2}--\ref{fig:13} are laid out like the original Figures~2 and 4--13. Neuron
+indices refer to our network instance.
 
-\subsection*{Inter-burst delay (Fig.~5)}
-Reproduced in direction: increasing $g_{AMPA}$ shortens the delay (10$\rightarrow$12\,nS:
-5.56$\rightarrow$4.61\,ms) and increasing $g_A$ lengthens it. Magnitudes differ: the $g_A$
-effect is $\sim$0.2\,ms (original bars $\sim$3.4$\rightarrow$7\,ms), and the postsynaptic burst
-has 1--2 spikes (original $\sim$6). The Fig.~5A legend contradicts the text on the direction of
-the $g_{AMPA}$ effect.
+\subsection*{Sequence propagation is reproduced (Fig.~4)}
+In 50 of 50 random network instances, activity propagated through all 120
+HVC\textsubscript{RA} in chain order (Fig.~\ref{fig:4}). Bursts had $3.95\pm0.11$ spikes and
+lasted $8.66\pm0.35$\,ms, against $4.76\pm0.48$ and $8.12\pm0.89$\,ms in the original. On
+average 114 of 120 HVC\textsubscript{RA} met the article's burst criterion. Successive neurons
+fired 1.96\,ms apart.
 
-\subsection*{Single-neuron perturbations (Figs.~6, 9, 11)}
-TODO: table from \texttt{notes/replication-results.md}.
+\subsection*{Inter-burst delay is reproduced in direction only (Fig.~5)}
+Raising $g_{AMPA}$ from 10 to 12\,nS shortened the delay from 5.6 to 4.6\,ms and added a spike,
+as the original text states. The original Fig.~5A legend shows the opposite. Raising $g_A$ from
+10 to 13\,nS lengthened the delay by only 0.2\,ms, against $\sim$3.6\,ms in the original, and the
+postsynaptic burst had 1--2 spikes rather than $\sim$6 (Fig.~\ref{fig:5}).
 
-\subsection*{HVC\textsubscript{X} and interneuron firing (Figs.~7, 8, 10, 12)}
-Not reproduced. TODO: describe; include the HVC\textsubscript{X} rate-limit result.
+\subsection*{HVC\textsubscript{X} and interneuron firing are not reproduced (Figs.~7, 8, 10)}
+Across 200 calibration runs inside the published ranges, every equation variant found in the
+supplementary code, and capacitance variations, HVC\textsubscript{X} never fired multi-spike
+rebound bursts. They fired single rebound spikes, and 27 of 50 were silent
+(Figs.~\ref{fig:7}, \ref{fig:10}). Interneurons fired sparsely (median 8 spikes per 400\,ms)
+rather than in the dense bursts of the original Figs.~7A and 8 (Fig.~\ref{fig:8}).
 
-\subsection*{Parameter ranges (Fig.~13)}
-TODO.
+In isolation, our HVC\textsubscript{X} model cannot fire faster than $\sim$160\,Hz, whereas the
+original Fig.~10 shows rebound bursts at $\sim$500\,Hz. An exploratory test of single changes,
+far outside the published values, also produced no bursts: faster $I_{CaT}$ de-inactivation, a
+hyperpolarising bias current, 3$\times$ stronger interneuron drive, and 6$\times$ stronger or
+8$\times$ longer inhibition. This points to an HVC\textsubscript{X} cell model different from the
+one specified.
+
+\subsection*{The sequence is far more robust to single-neuron changes than reported (Figs.~6, 9, 11, 12)}
+\begin{itemize}
+\item \textbf{HVC\textsubscript{RA} (Fig.~6).} Raising $g_A$ up to 3$\times$, or $g_{SK}$
+  15$\times$ (the original's factor), never broke the chain (0/16). With inhibition at the top of
+  its range (5\,nS), $g_A$ $\times$20 or $g_{SK}$ $\times$60 silenced the perturbed neuron and
+  broke the chain there, 8/8 (Fig.~\ref{fig:6}).
+\item \textbf{Interneurons (Fig.~9) and HVC\textsubscript{X} (Fig.~11).} The perturbed cells
+  fired more, but the chain never broke (0/24 for each figure; Figs.~\ref{fig:9},
+  \ref{fig:11}).
+\item \textbf{HVC\textsubscript{X} variation (Fig.~12).} Drawing HVC\textsubscript{X}
+  conductances per neuron broke the chain in 0 of 100 runs, against 59/100 disrupted in the
+  original (Fig.~\ref{fig:12}).
+\end{itemize}
+In the original, these breaks run through dense interneuron firing, which we do not reproduce.
+
+\subsection*{The narrow HVC\textsubscript{RA}$\to$HVC\textsubscript{RA} window is reproduced (Fig.~13)}
+Varying one conductance at a time (Fig.~\ref{fig:13}):
+\begin{itemize}
+\item HVC\textsubscript{RA}$\to$HVC\textsubscript{RA} worked only between 28.0 and 30.25\,nS,
+  matching the original's narrow 29--31\,nS. Weaker synapses broke the chain; stronger ones gave
+  over-long bursts.
+\item HVC\textsubscript{RA} also required $g_{SK}\gtrsim11.6$\,nS and $g_A\gtrsim8$\,nS. These
+  are only the upper parts of the published ranges, so drawing conductances per neuron across the
+  full ranges left just 8/120 HVC\textsubscript{RA} meeting the criterion.
+\item All HVC\textsubscript{X} and interneuron conductances, and the remaining synapses, were
+  tolerated across and beyond their ranges, consistent with the chain's insensitivity to those
+  cells.
+\end{itemize}
 
 \subsection*{Robustness}
-TODO: solver comparison, seeds, noise threshold, HVC\textsubscript{X} ablation.
+\begin{itemize}
+\item \textbf{Solver tolerance} (Fig.~\ref{fig:num}). At MATLAB's default tolerances, spike times
+  drifted by up to $\sim$6\,ms along the chain, bursts lengthened from 8.6 to 10.7\,ms, and the
+  burst criterion dropped from 111 to 56 of 120. RK4 at 0.025 and 0.01\,ms agreed with tight
+  RK45 to within $\sim$0.3\,ms.
+\item \textbf{Noise.} Additive white-noise current had no effect up to
+  $\sigma=10$\,pA\,ms$^{1/2}$. It degraded bursts progressively above that and broke the chain
+  at $\sigma=160$.
+\item \textbf{Removing HVC\textsubscript{X}} entirely, a question raised in review of the
+  original, left propagation intact (16/16; 114.6/120 meeting the criterion).
+\end{itemize}
 
 \section*{Discussion}
-TODO.
+TODO: what is and isn't reproducible; the documentation problems
+(errors in Appendix~1, unreported parameters, supplementary code that does not implement the
+network); the sensitivity to solver tolerance; and what the HVC\textsubscript{X} result implies.
+
+% ------------------------------------------------------------------ figures
+\begin{figure}[p]\centering
+\includegraphics[width=0.45\linewidth]{figures/replication_fig2.png}
+\caption{(cf.\ original Fig.~2, right column) Model pair and triplet responses to 10\,ms,
+0.5\,nA pulses (A, B, C, E) or a 500\,ms, 0.5\,nA step (D), using network-strength synapses. PSPs
+are 3--5$\times$ larger than in Mooney \& Prather\supercite{MooneyPrather2005}, and the
+excitatory ones reach threshold; the original pair conductances are not reported.}
+\label{fig:2}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=0.85\linewidth]{figures/replication_fig4.png}
+\caption{(cf.\ original Fig.~4) Membrane potential of the 120 HVC\textsubscript{RA}, in chain
+order, after a pulse into the first neuron (seed 0). Inset: two successive neurons (boxed) and
+the delay between their first spikes.}
+\label{fig:4}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=0.95\linewidth]{figures/replication_fig5.png}
+\caption{(cf.\ original Fig.~5) Effect of $g_{AMPA}$ (A) and $g_A$ (B) on the delay between
+successive HVC\textsubscript{RA} bursts. Bars: first-spike-peak delay.}
+\label{fig:5}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=0.95\linewidth]{figures/replication_fig6.png}
+\caption{(cf.\ original Fig.~6) Up-regulating $g_A$ (A, $\times$20) or $g_{SK}$ (B, $\times$15,
+the original factor) in one HVC\textsubscript{RA}, with HVC\textsubscript{INT}$\to$RA = 5\,nS.
+(A) breaks the chain at the perturbed neuron; (B) does not.}
+\label{fig:6}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=0.7\linewidth]{figures/replication_fig7.png}
+\caption{(cf.\ original Fig.~7) Activity of 10 HVC\textsubscript{INT} (A) and 10
+HVC\textsubscript{X} (B). Interneurons fire sparsely, and HVC\textsubscript{X} fire isolated
+rebound spikes rather than 2--4 rebound bursts.}
+\label{fig:7}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=0.8\linewidth]{figures/replication_fig8.png}
+\caption{(cf.\ original Fig.~8) One interneuron with its presynaptic HVC\textsubscript{RA}
+(red) and HVC\textsubscript{X} (blue). Its spikes align with its HVC\textsubscript{RA} inputs,
+but it doesn't burst densely.}
+\label{fig:8}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=0.95\linewidth]{figures/replication_fig9.png}
+\caption{(cf.\ original Fig.~9) Up-regulating $g_{CaT}$ (A) or $g_H$ (B) 10$\times$ in one
+interneuron (bottom trace). The interneuron fires more, but the chain does not break.}
+\label{fig:9}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=0.8\linewidth]{figures/replication_fig10.png}
+\caption{(cf.\ original Fig.~10) An HVC\textsubscript{X} and its presynaptic interneurons (A),
+with a 60\,ms zoom (B). HVC\textsubscript{X} escape inhibition with single spikes.}
+\label{fig:10}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=\linewidth]{figures/replication_fig11.png}
+\caption{(cf.\ original Fig.~11) HVC\textsubscript{X} perturbations: $g_H$ $\times$10 (A),
+$g_{CaT}$ $\times$15 (B), $g_{SK}=0$ (C). The bottom traces show the perturbed
+HVC\textsubscript{X} and an interneuron it excites. The chain does not break.}
+\label{fig:11}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=\linewidth]{figures/replication_fig12.png}
+\caption{(cf.\ original Fig.~12) Example with HVC\textsubscript{X} conductances drawn per neuron
+within the published ranges. (A) HVC\textsubscript{RA}, (B) interneurons, (C)
+HVC\textsubscript{X}. None of 100 such runs broke the chain.}
+\label{fig:12}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=0.8\linewidth]{figures/replication_fig13.png}
+\caption{(cf.\ original Fig.~13) Ionic (A) and synaptic (B) conductances varied one at a time
+around the final configuration (2 seeds). Shaded: the original allowed range. Filled: values
+for which the chain completes and $\geq$90/120 HVC\textsubscript{RA} meet the burst criterion in
+both seeds. Open: rejected values.}
+\label{fig:13}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=\linewidth]{figures/article_numerics_noise.png}
+\caption{Numerics and noise (not in the original). Left: first-spike-time deviation from RK45
+($10^{-6}$) along the chain for RK45 at MATLAB-default tolerance and RK4 at 0.025/0.01\,ms.
+Middle: burst duration by solver (dashed: original mean). Right: chain completion and burst
+criterion against noise amplitude.}
+\label{fig:num}\end{figure}
 
 \section*{Reproducibility notes}
-\begin{table}[h]
-\caption{Gaps, apparent typos and inconsistencies found during replication (summary; the full
-log is in the repository). TODO: final selection.}
+\begin{table}[h]\small
+\caption{Main corrections and open choices. The full log of $\sim$45 items is in the repository
+(\texttt{notes/issues-log.md}).}
 \label{tab:issues}
+\begin{tabular}{p{0.32\linewidth}p{0.6\linewidth}}
+\hline
+Item (Appendix~1) & Used here \\ \hline
+Eq.~9: $(x_\infty - V)/\tau_x$ & $(x_\infty - x)/\tau_x$ (Daou 2013) \\
+$\tau_n$ constant 10\,ms & $\bar\tau_n/\cosh((V-\theta_n)/2\sigma_n)$ (Daou 2013); the constant gives 10\,ms spikes \\
+Eq.~17: $r_{T\infty}$ uses $\theta_{aT},\sigma_{aT}$ & $\theta_{rT}=-67$, $\sigma_{rT}=2$ (Daou 2013) \\
+Eq.~21: $+k_{Ca}([Ca]-b_{Ca})$ & $-f[\varepsilon(I_{CaL}+I_{CaT})+k_{Ca}([Ca]-b_{Ca})]$ (Daou 2013) \\
+GHK currents without a $V$ factor & $g\,x\,V\,Ca_{ex}/(1-e^{2V/RTF})$ (Daou 2013) \\
+$r_{s\infty}$ sign (activates on depolarisation) & sign as in Daou 2013 code \\
+$\sigma_{aT}=+7.8$ & $-7.8$ (Daou 2013) \\
+Transmitter release sign & $T_{max}/(1+e^{-(V_{pre}-V_T)/K_p})$ (Destexhe 1994) \\
+$C_m$, $Ca_{ex}$, $k_r$, $T$ not given & Daou 2013: $C_m$ 20/100/75\,pF, 2.5\,mM, $k_r$ 0.3/0.01, $RT/F$ 25.7\,mV \\
+$V_{AMPA}$, $V_{GABA}$ not given & 0, $-80$\,mV (Destexhe 1994) \\
+Default $\bar g$ values not given & calibrated within the Fig.~13 ranges (Methods) \\
+Solver tolerances, seeds, start pulse & rtol $10^{-6}$; seeds in repository; 500\,pA, 10\,ms \\
+Supplementary code & network files are a template (no HVC\textsubscript{X}, no RA$\leftrightarrow$INT synapses); ODE file identical to Daou 2013 \\ \hline
+\end{tabular}
 \end{table}
 
 \section*{Acknowledgements}

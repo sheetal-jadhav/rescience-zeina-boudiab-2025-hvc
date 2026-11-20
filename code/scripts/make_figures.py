@@ -142,7 +142,7 @@ def fig_numerics():
     axs[0].set_yscale("symlog", linthresh=0.01); axs[0].legend(fontsize=7)
     allm = ("rk45_1e-3", "rk45_1e-6", "rk4_0.025", "rk4_0.01")
     du = [[x["score"]["ra_dur"] for x in sol if x["method"] == m] for m in allm]
-    axs[1].boxplot(du, labels=allm); axs[1].set_ylabel("RA burst duration (ms)")
+    axs[1].boxplot(du, tick_labels=allm); axs[1].set_ylabel("RA burst duration (ms)")
     axs[1].axhline(8.12, color="crimson", ls="--", lw=0.8); axs[1].tick_params(axis="x", rotation=30)
     nz = load("robust_noise.jsonl")
     sig = sorted({x["sigma"] for x in nz})

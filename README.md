@@ -64,5 +64,7 @@ Decision taken 2026-11-20. Background and alternatives considered:
 - [x] **Phase 2 closed (2026-11-20), tag `phase2-complete`:** the supplementary code doesn't implement
       the network (scaffold + Daou 2013 single-cell files). Report: `notes/phase2-report.md`
 - [x] Figs 5, 6, 9, 11 run → `notes/replication-results.md` (per-figure verdicts)
+- [x] Final pipeline at accurate tolerances: all figures (2, 4-13) in the original layout, robustness, Fig 12;
+      article draft filled (`article/content.tex`), results in `notes/replication-results.md`
 - [ ] Robustness and ablation
 - [ ] Article (ReScience C LaTeX template)

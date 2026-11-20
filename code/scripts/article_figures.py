@@ -318,6 +318,7 @@ def fig12(example):
 
 def fig13():
     data = load("robust_fig13.jsonl")
+    # 'accurate' judged on HVC_RA only (X/INT criteria are never met; see text)
     ok = lambda s: "error" not in s and s["ra_fired"] == 120 and s["ra_in_order"] and s["ra_ok"] >= 0.75 * 120
     ionic = [("gA@RA", "HVC$_{RA}$", "g$_A$", BLACK), ("gSK@RA", "HVC$_{RA}$", "g$_{SK}$", (0, 0.45, 0.85)),
              ("gSK@X", "HVC$_X$", "g$_{SK}$", (0, 0.45, 0.85)), ("gH@INT", "HVC$_{INT}$", "g$_H$", (0, 0.65, 0.3)),
@@ -329,14 +330,15 @@ def fig13():
     fig, axs = plt.subplots(2, 1, figsize=(9, 9))
     for ax, L, items in ((axs[0], "A", [(k, lab, c) for k, lab, _, c in ionic]), (axs[1], "B", synap)):
         for i, (key, lab, col) in enumerate(items, 1):
-            vals = [x["point"][key] for x in data if x["tag"] == f"fig13:{key}"]
-            good = [x["point"][key] for x in data if x["tag"] == f"fig13:{key}" and ok(x["score"])]
+            runs = [x for x in data if x["tag"] == f"fig13:{key}"]
+            # a tested value counts as allowed only if every seed passes
+            values = sorted({x["point"][key] for x in runs})
+            good = [v for v in values if all(ok(x["score"]) for x in runs if x["point"][key] == v)]
+            bad = [v for v in values if v not in good]
             lo, hi = RANGES[key]
             ax.add_patch(plt.Rectangle((i - 0.3, lo), 0.6, hi - lo, color=(0.75, 0.8, 0.95), alpha=0.7, lw=0))
-            jit = np.random.default_rng(i).uniform(-0.12, 0.12, len(vals))
-            ax.scatter(i + jit, vals, s=10, facecolor="none", edgecolor="0.6", lw=0.6)
-            if good:
-                ax.scatter(i + jit[:len(good)] * 0, good, s=16, color=col)
+            ax.scatter([i] * len(bad), bad, s=14, facecolor="none", edgecolor="0.55", lw=0.8)
+            ax.scatter([i] * len(good), good, s=18, color=col)
         ax.set_xticks(range(1, len(items) + 1))
         ax.set_xticklabels([lab for _, lab, *_ in items], fontsize=8)
         ax.set_ylabel("nS"); letter(ax, L)
@@ -344,7 +346,7 @@ def fig13():
     axs[0].legend(handles=[Line2D([], [], marker="o", ls="", color=c, label=l) for l, c in
                            (("g$_A$", BLACK), ("g$_{SK}$", (0, 0.45, 0.85)), ("g$_H$", (0, 0.65, 0.3)), ("g$_{CaT}$", RED))]
                   + [plt.Rectangle((0, 0), 1, 1, color=(0.75, 0.8, 0.95), label="original range"),
-                     Line2D([], [], marker="o", ls="", mfc="none", mec="0.6", label="tested, failed")],
+                     Line2D([], [], marker="o", ls="", mfc="none", mec="0.6", label="tested, rejected")],
                   fontsize=7, loc="upper right")
     axs[1].legend(handles=[Line2D([], [], marker="o", ls="", color=c, label=l) for l, c in
                            (("g$_{AMPA}$", RED), ("g$_{GABA}$", BLACK))], fontsize=7, loc="upper right")
