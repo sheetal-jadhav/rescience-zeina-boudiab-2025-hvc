@@ -1,0 +1,32 @@
+{
+ "_comment": "Selected from random_tight.jsonl by select_config.py (objective: ra_ok - 20|spikes-4.76| - 10|dur-8.12|); integration rtol 1e-6, atol 1e-9. All values inside the Fig 13 ranges.",
+ "_score": {
+  "ra_fired": 120,
+  "ra_in_order": true,
+  "ra_ok": 115,
+  "ra_spikes": 3.975,
+  "ra_dur": 8.710416666666667,
+  "ra_dur_sd": 0.6429066752302036,
+  "link_ms": 1.9752100840336133,
+  "x_ok": 0,
+  "x_silent": 26,
+  "x_bursts_med": 0.0,
+  "x_bursts_max": 6,
+  "x_spb_med": 1.0,
+  "int_spikes_med": 9.0
+ },
+ "gA@RA": 10.174,
+ "gSK@RA": 12.098,
+ "gSK@X": 2.512,
+ "gH@X": 7.032,
+ "gCaT@X": 4.318,
+ "gH@INT": 1.137,
+ "gCaT@INT": 1.181,
+ "g_RA_RA": 29.576,
+ "g_RA_INT": 11.463,
+ "g_X_INT": 5.137,
+ "g_INT_X": 24.676,
+ "g_INT_RA": 2.757,
+ "sw_bT_exponent": 2,
+ "sw_alpha_h_offset": 15.0
+}
