@@ -61,6 +61,7 @@ Decision taken 2026-11-20. Background and alternatives considered:
 - [ ] Phase 1 week 1: single cells (Fig 2)
 - [ ] Phase 1 weeks 2-3: network (Figs 4-11)
 - [ ] Phase 1 week 4: Figs 12-13, then commit
-- [ ] Phase 2: compare with the original code
+- [x] **Phase 2 closed (2026-11-20), tag `phase2-complete`:** the supplementary code doesn't implement
+      the network (scaffold + Daou 2013 single-cell files). Report: `notes/phase2-report.md`
 - [ ] Robustness and ablation
 - [ ] Article (ReScience C LaTeX template)

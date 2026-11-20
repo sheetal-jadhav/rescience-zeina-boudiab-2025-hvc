@@ -125,3 +125,14 @@ Next: calibrate within the Fig-13 ranges (X gH/gCaT/gSK, INT->X, X->INT) for the
 | **INT firing too sparse** | Median 14-25 spikes per 400 ms (up to ~80 with Cm/4) vs Fig 7A bursts of 5-30 spikes at very high rate. Main driver: g_RA_INT (r = +0.82). |
 | **Mechanistic reading** | The T-current availability gate rT has τ ≈ τr0 + τr1 = 287.5 ms at all physiological V (θrrT = +68 mV puts the sigmoid in saturation). At X rest (−62.5 mV) rT ≈ 0.1, so bT ≈ 0.03. The brief (~5-20 ms) IPSPs in the network can't de-inactivate ICaT, so X rebounds with one spike. Daou13's slice data (long current steps) don't test this regime. |
 | **Candidate causes (to test)** | (1) sign of θrrT (Terman 2002 convention), (2) φrT, (3) X resting potential (more negative rest → rT available), (4) θaT −64/−65, (5) RTF, (6) INT drive structure, (7) a difference only the original code can reveal (Phase 2) |
+
+## Phase 2 (2026-11-20): see `notes/phase2-report.md`
+- **I-15 (upgraded, major):** the supplementary "network" code is a non-functional scaffold
+  (no X, no RA<->INT synapses, placeholder INT). The "ODE file used in all simulations" is
+  Daou 2013's single-neuron file, unchanged. The "Figure 2" code is ported Daou 2013
+  single-neuron XPP files with no synapses. No figure from Figs 2 or 4-13 can be generated from
+  the supplement.
+- **Code settles (single cell):** D-02, D-03 (3), D-05, D-06 (cosh), D-07 (φrT unused), RTF
+  26.7, T-03, T-06. **Code contradicts the text:** D-01 (+50), D-04 (−65), the presence of
+  I_Nap/I_KNa, RA gK/gA values, RA gCaT.
+- **Everything network-level remains OPEN**: not determinable from the published material.
