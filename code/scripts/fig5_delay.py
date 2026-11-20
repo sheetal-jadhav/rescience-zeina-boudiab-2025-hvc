@@ -39,7 +39,7 @@ def pair(g_ampa, gA_post, gA_pre=RA_GA):
     m = Model(cells, Synapses([0], [1], [g_ampa], [0]), switches=KW["switches"])
     y0 = settle(m, m.initial_state(), 500.0)
     m.stimulus = pulses(2, [(0, 20.0, 30.0, 500.0)])
-    r = run_rk45(m, y0, 90.0, dt_out=0.01, max_step=0.05)
+    r = run_rk45(m, y0, 90.0, dt_out=0.01, max_step=0.05, rtol=1e-6, atol=1e-9)
     pre, post = (peaks(r["t"], r["V"][:, k]) for k in (0, 1))
     delay = post[0] - pre[0] if len(pre) and len(post) else np.nan
     return {"g_ampa": g_ampa, "gA_post": gA_post, "pre_spikes": len(pre),

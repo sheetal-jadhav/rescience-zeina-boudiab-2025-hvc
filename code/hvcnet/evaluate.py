@@ -13,10 +13,13 @@ from .sim import run_rk45, settle
 
 
 def simulate(spec=NetworkSpec(), seed=0, overrides=None, switches=Switches(), t_end=400.0,
-             kick=(50.0, 60.0, 500.0), rtol=1e-3, gating=None, kinetics=None, per_neuron=None):
+             kick=(50.0, 60.0, 500.0), rtol=1e-6, atol=1e-9, gating=None, kinetics=None,
+             per_neuron=None):
     """Build, settle, kick RA1 and run. `overrides` maps Cells attribute -> {type: value};
     `gating`/`kinetics` are field overrides for Gating/SynapseKinetics (exploratory only).
-    `per_neuron` maps Cells attribute -> {neuron index: ("set"|"mul", value)} (Figs 6/9/11)."""
+    `per_neuron` maps Cells attribute -> {neuron index: ("set"|"mul", value)} (Figs 6/9/11).
+    Default tolerances rtol 1e-6 / atol 1e-9: MATLAB's ode45 defaults (1e-3/1e-6) shift spike
+    times by up to ~6 ms along the chain (results/robust_solver.jsonl)."""
     net = build(spec, seed=seed)
     if kinetics:
         s = net.synapses
@@ -33,7 +36,7 @@ def simulate(spec=NetworkSpec(), seed=0, overrides=None, switches=Switches(), t_
               switches=switches)
     y0 = settle(m, m.initial_state(), 500.0)
     m.stimulus = pulses(net.cells.N, [(net.first_ra, *kick)])
-    r = run_rk45(m, y0, t_end, rtol=rtol)
+    r = run_rk45(m, y0, t_end, rtol=rtol, atol=atol)
     return net, r, spike_times(r["t"], r["V"])
 
 

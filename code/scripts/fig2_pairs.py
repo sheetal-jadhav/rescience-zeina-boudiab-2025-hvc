@@ -32,7 +32,7 @@ def circuit(types, edges, stim, t_end, g=SYNAPSE_G, switches=None):
     m = Model(Cells(types), Synapses(pre, post, gg, kind), **kw)
     y0 = settle(m, m.initial_state(), 800.0)
     m.stimulus = pulses(len(types), stim)
-    return run_rk45(m, y0, t_end, dt_out=0.05, max_step=0.1)
+    return run_rk45(m, y0, t_end, dt_out=0.05, max_step=0.1, rtol=1e-6, atol=1e-9)
 
 
 def panels(switches=None):

@@ -8,8 +8,10 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE)); sys.path.insert(0, str(HERE.parent))
 from calibrate_random import run
 
-CONFIG = {k: v for k, v in json.load(open(HERE.parent / "configs/phase1.json")).items()
-          if not k.startswith("_")}
+import os
+# HVC_CONFIG selects the configuration (default: the frozen Phase-1 one)
+CONFIG_PATH = HERE.parent / os.environ.get("HVC_CONFIG", "configs/phase1.json")
+CONFIG = {k: v for k, v in json.load(open(CONFIG_PATH)).items() if not k.startswith("_")}
 
 if __name__ == "__main__":
     n = int(sys.argv[1]) if len(sys.argv) > 1 else 16

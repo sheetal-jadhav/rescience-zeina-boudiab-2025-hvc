@@ -70,6 +70,10 @@ def job_pern(seed):
 def _model(seed, point=CONFIG):
     kw = to_kwargs(point)
     net = build(kw["spec"], seed=seed)
+    for name, per_type in kw["overrides"].items():   # apply the frozen per-class conductances
+        arr = getattr(net.cells, name)
+        for typ, val in per_type.items():
+            arr[net.cells.types == typ] = val
     m = Model(net.cells, net.synapses, switches=kw["switches"])
     y0 = settle(m, m.initial_state(), 500.0)
     m.stimulus = pulses(net.cells.N, [(net.first_ra, 50.0, 60.0, 500.0)])
@@ -81,7 +85,7 @@ def job_solver(args):
     net, m, y0 = _model(seed)
     t0 = time.time()
     if method == "rk45_1e-3":
-        r = run_rk45(m, y0, 400.0)
+        r = run_rk45(m, y0, 400.0)  # MATLAB-default tolerances, for comparison
     elif method == "rk45_1e-6":
         r = run_rk45(m, y0, 400.0, rtol=1e-6, atol=1e-9)
     elif method == "rk4_0.025":
