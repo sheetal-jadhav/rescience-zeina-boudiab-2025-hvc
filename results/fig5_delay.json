@@ -1,0 +1,248 @@
+{
+ "A": [
+  {
+   "g_ampa": 10.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.560000000000002
+  },
+  {
+   "g_ampa": 12.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 2,
+   "delay_ms": 4.609999999999999
+  }
+ ],
+ "B": [
+  {
+   "g_ampa": 10.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.560000000000002
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 13.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.780000000000001
+  }
+ ],
+ "sweep_gAMPA": [
+  {
+   "g_ampa": 6.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 0,
+   "delay_ms": null
+  },
+  {
+   "g_ampa": 8.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 7.390000000000001
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.560000000000002
+  },
+  {
+   "g_ampa": 12.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 2,
+   "delay_ms": 4.609999999999999
+  },
+  {
+   "g_ampa": 14.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 2,
+   "delay_ms": 4.09
+  },
+  {
+   "g_ampa": 16.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 2,
+   "delay_ms": 3.75
+  },
+  {
+   "g_ampa": 18.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 2,
+   "delay_ms": 3.4299999999999997
+  },
+  {
+   "g_ampa": 20.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 2,
+   "delay_ms": 2.9800000000000004
+  },
+  {
+   "g_ampa": 22.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 3,
+   "delay_ms": 2.620000000000001
+  },
+  {
+   "g_ampa": 24.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 3,
+   "delay_ms": 2.3500000000000014
+  },
+  {
+   "g_ampa": 26.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 3,
+   "delay_ms": 2.1400000000000006
+  },
+  {
+   "g_ampa": 28.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 3,
+   "delay_ms": 1.9700000000000024
+  },
+  {
+   "g_ampa": 30.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 4,
+   "delay_ms": 1.8300000000000018
+  },
+  {
+   "g_ampa": 32.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 4,
+   "delay_ms": 1.7100000000000009
+  },
+  {
+   "g_ampa": 34.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 4,
+   "delay_ms": 1.620000000000001
+  }
+ ],
+ "sweep_gA": [
+  {
+   "g_ampa": 10.0,
+   "gA_post": 1.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.09
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 2.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.140000000000001
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 3.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.18
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 4.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.23
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 5.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.280000000000001
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 6.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.330000000000002
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 7.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.380000000000003
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 8.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.440000000000001
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 9.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.5
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 10.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.560000000000002
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 11.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.630000000000003
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 12.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.699999999999999
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 13.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.780000000000001
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 14.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.859999999999999
+  },
+  {
+   "g_ampa": 10.0,
+   "gA_post": 15.0,
+   "pre_spikes": 3,
+   "post_spikes": 1,
+   "delay_ms": 5.949999999999999
+  }
+ ]
+}

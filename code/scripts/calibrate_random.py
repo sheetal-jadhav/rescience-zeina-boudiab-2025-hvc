@@ -23,7 +23,8 @@ CHOICES = {"sw_bT_exponent": [2, 3], "sw_alpha_h_offset": [15.0, 50.0]}
 TYPES = {"RA": RA, "X": X, "INT": INT}
 
 
-def run(point, seed=0):
+def to_kwargs(point):
+    """Translate a flat parameter point into simulate() keyword arguments."""
     g, overrides, sw, gating, kin = dict(SYNAPSE_G), {}, {}, {}, {}
     for k, v in point.items():
         if k.startswith("gt_"):
@@ -38,10 +39,14 @@ def run(point, seed=0):
         else:
             name, typ = k.split("@")
             overrides.setdefault(name, {})[TYPES[typ]] = v
+    return dict(spec=NetworkSpec(g=g), overrides=overrides, switches=with_switches(**sw),
+                gating=gating, kinetics=kin)
+
+
+def run(point, seed=0):
     t0 = time.time()
     try:
-        net, r, sp = simulate(NetworkSpec(g=g), seed=seed, overrides=overrides,
-                              switches=with_switches(**sw), gating=gating, kinetics=kin)
+        net, r, sp = simulate(seed=seed, **to_kwargs(point))
         s = score(net, sp)
     except Exception as e:
         s = {"error": repr(e)}
