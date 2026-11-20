@@ -1,0 +1,7 @@
+{
+  "_comment": "Phase-1 frozen configuration: best calibration-round-1 point (results/random1.jsonl) by RA criterion with spikes/burst near the paper; all values inside Fig 13 ranges. Switches: bT exponent 3 (Daou13), alpha_h +15 (text), tau_n voltage-dependent (Daou13).",
+  "gA@RA": 12.776, "gSK@RA": 12.016, "gSK@X": 2.843, "gH@X": 7.11, "gCaT@X": 5.719,
+  "gH@INT": 3.009, "gCaT@INT": 1.038, "g_RA_RA": 29.205, "g_RA_INT": 28.337,
+  "g_X_INT": 26.824, "g_INT_X": 21.575, "g_INT_RA": 2.011,
+  "sw_bT_exponent": 3, "sw_alpha_h_offset": 15.0
+}

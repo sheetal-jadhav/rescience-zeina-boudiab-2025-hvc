@@ -53,8 +53,9 @@ Decision taken 2026-11-20. Background and alternatives considered:
       (RK45 and RK4), analysis. 8 tests pass (`../.venv/bin/python -m pytest code/tests`).
 - [x] First network run: 120/120 RA fire in order, 4.78 ± 0.71 spikes per burst (paper
       4.76 ± 0.48). Raster: `figures/phase1_fig4_raster.png`.
-- [ ] Calibrate HVC(X) (0-12 bursts vs the paper's 1-4) and the RA burst width (12 vs 8 ms)
-      within the Fig 13 ranges
+- [x] Calibration round 1 (290 runs within the Fig 13 ranges): RA reproduced; X rebound bursts
+      and dense INT not reproduced
+- [x] **Phase 1 closed (2026-11-20), tag `phase1-complete`.** Report: `notes/phase1-report.md`
 - [ ] **User:** decide whether to `git init` this folder and create a public GitHub repo.
       ReScience requires a public repo at submission.
 - [ ] Phase 1 week 1: single cells (Fig 2)
