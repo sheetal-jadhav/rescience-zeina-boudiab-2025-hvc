@@ -19,7 +19,7 @@ def simulate(spec=NetworkSpec(), seed=0, overrides=None, switches=Switches(), t_
     `gating`/`kinetics` are field overrides for Gating/SynapseKinetics (exploratory only).
     `per_neuron` maps Cells attribute -> {neuron index: ("set"|"mul", value)} (Figs 6/9/11).
     Default tolerances rtol 1e-6 / atol 1e-9: MATLAB's ode45 defaults (1e-3/1e-6) shift spike
-    times by up to ~6 ms along the chain (results/robust_solver.jsonl)."""
+    times by up to ~8 ms along the chain (results/robust_solver.jsonl)."""
     net = configure(spec, seed, overrides, kinetics, per_neuron)
     m = Model(net.cells, net.synapses, gating=replace(Gating(), **(gating or {})),
               switches=switches)

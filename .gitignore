@@ -14,3 +14,6 @@ notes/private/
 
 # Large raw traces from daou13_xcell.py (summary is in results/daou13_xcell.jsonl)
 results/*.npy
+
+# Run logs (local paths, warnings)
+results/*.log

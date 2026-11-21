@@ -158,14 +158,14 @@ def run_net(net, switches=Switches(), t_end=400.0, kick=(50.0, 60.0, 500.0), t_s
 
     mon = b2.SpikeMonitor(G)
     network = b2.Network(*groups, mon)
-    network.run(t_settle * ms)
+    network.run(t_settle * ms, namespace={})
     t0 = network.t / ms
     t_on, t_off, amp = kick
-    network.run(t_on * ms)
+    network.run(t_on * ms, namespace={})
     G.Iapp[net.first_ra] = amp * pA
-    network.run((t_off - t_on) * ms)
+    network.run((t_off - t_on) * ms, namespace={})
     G.Iapp[net.first_ra] = 0 * pA
-    network.run((t_end - t_off) * ms)
+    network.run((t_end - t_off) * ms, namespace={})
 
     trains = mon.spike_trains()
     spikes = [np.asarray(trains[i] / ms) - t0 for i in range(c.N)]

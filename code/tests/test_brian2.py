@@ -5,9 +5,9 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-pytest.importorskip("brian2")  # optional: pip install -r code/hvcnet_brian2/requirements.txt
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-import hvcnet_brian2 as hb
+# optional: pip install -r code/hvcnet_brian2/requirements.txt
+hb = pytest.importorskip("hvcnet_brian2", exc_type=ImportError)
 from hvcnet.evaluate import simulate
 from hvcnet.params import NetworkSpec
 

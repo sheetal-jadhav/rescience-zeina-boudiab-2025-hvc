@@ -58,6 +58,15 @@ Code, configurations, raw results and the full issues log are at
 \url{https://github.com/sheetal-jadhav/rescience-boudiab-hvc}. All tests (\texttt{pytest}) and
 figures can be regenerated with the scripts in \texttt{code/scripts} (order in the README).
 
+\subsection*{Second implementation in Brian2}
+To check our implementation, we wrote the model a second time in Brian2\supercite{Stimberg2019}
+(\texttt{code/hvcnet\_brian2}). The equations are rewritten in Brian2's equation syntax, with
+units, from the same specification. Only the parameter values and the network wiring are
+shared, so both codes simulate identical networks. Brian2 integrates with fixed-step RK4
+(0.01\,ms) and updates synapses and neurons in separate sub-steps. The folder has its own
+README, requirements and a single script that runs the test, the cross-check and the comparison
+with the original article.
+
 \subsection*{Parameters not given in the article}
 The article gives the variable conductances only as allowed ranges (Fig.~13). We sampled 200
 configurations uniformly inside those ranges and kept the one maximising
@@ -75,9 +84,9 @@ indices refer to our network instance.
 
 \subsection*{Sequence propagation is reproduced (Fig.~4)}
 In 50 of 50 random network instances, activity propagated through all 120
-HVC\textsubscript{RA} in chain order (Fig.~\ref{fig:4}). Bursts had $3.95\pm0.11$ spikes and
-lasted $8.66\pm0.35$\,ms, against $4.76\pm0.48$ and $8.12\pm0.89$\,ms in the original. On
-average 114 of 120 HVC\textsubscript{RA} met the article's burst criterion. Successive neurons
+HVC\textsubscript{RA} in chain order (Fig.~\ref{fig:4}). Bursts had $3.93\pm0.12$ spikes and
+lasted $8.61\pm0.35$\,ms, against $4.76\pm0.48$ and $8.12\pm0.89$\,ms in the original. On
+average 115 of 120 HVC\textsubscript{RA} met the article's burst criterion. Successive neurons
 fired 1.96\,ms apart.
 
 \subsection*{Inter-burst delay is reproduced in direction only (Fig.~5)}
@@ -116,7 +125,8 @@ parameters are not reported.
 \item \textbf{HVC\textsubscript{RA} (Fig.~6).} Raising $g_A$ up to 3$\times$, or $g_{SK}$
   15$\times$ (the original's factor), never broke the chain (0/16). With inhibition at the top of
   its range (5\,nS), $g_A$ $\times$20 or $g_{SK}$ $\times$60 silenced the perturbed neuron and
-  broke the chain there, 8/8 (Fig.~\ref{fig:6}).
+  broke the chain there, 8/8. At that inhibition, $g_{SK}$ $\times$15 broke the chain in 1 of 8
+  trials, four neurons downstream of the perturbed one (Fig.~\ref{fig:6}).
 \item \textbf{Interneurons (Fig.~9) and HVC\textsubscript{X} (Fig.~11).} The perturbed cells
   fired more, but the chain never broke (0/24 for each figure; Figs.~\ref{fig:9},
   \ref{fig:11}).
@@ -129,12 +139,12 @@ In the original, these breaks run through dense interneuron firing, which we do 
 \subsection*{The narrow HVC\textsubscript{RA}$\to$HVC\textsubscript{RA} window is reproduced (Fig.~13)}
 Varying one conductance at a time (Fig.~\ref{fig:13}):
 \begin{itemize}
-\item HVC\textsubscript{RA}$\to$HVC\textsubscript{RA} worked only between 28.0 and 30.25\,nS,
+\item HVC\textsubscript{RA}$\to$HVC\textsubscript{RA} worked only between 28.0 and 30.5\,nS,
   matching the original's narrow 29--31\,nS. Weaker synapses broke the chain; stronger ones gave
   over-long bursts.
-\item HVC\textsubscript{RA} also required $g_{SK}\gtrsim11.6$\,nS and $g_A\gtrsim8$\,nS. These
+\item HVC\textsubscript{RA} also required $g_{SK}\gtrsim11.6$\,nS and $g_A\gtrsim5.6$\,nS. These
   are only the upper parts of the published ranges, so drawing conductances per neuron across the
-  full ranges left just 8/120 HVC\textsubscript{RA} meeting the criterion.
+  full ranges left just 7/120 HVC\textsubscript{RA} meeting the criterion.
 \item All HVC\textsubscript{X} and interneuron conductances, and the remaining synapses, were
   tolerated across and beyond their ranges, consistent with the chain's insensitivity to those
   cells.
@@ -143,15 +153,44 @@ Varying one conductance at a time (Fig.~\ref{fig:13}):
 \subsection*{Robustness}
 \begin{itemize}
 \item \textbf{Solver tolerance} (Fig.~\ref{fig:num}). At MATLAB's default tolerances, spike times
-  drifted by up to $\sim$6\,ms along the chain, bursts lengthened from 8.6 to 10.7\,ms, and the
-  burst criterion dropped from 111 to 56 of 120. RK4 at 0.025 and 0.01\,ms agreed with tight
-  RK45 to within $\sim$0.3\,ms.
+  drifted by up to $\sim$8\,ms along the chain, bursts lengthened from 8.6 to 10.9\,ms, and the
+  burst criterion dropped from 115 to 44 of 120. RK4 at 0.025 and 0.01\,ms agreed with tight
+  RK45 to within 0.4 and 0.03\,ms.
 \item \textbf{Noise.} Additive white-noise current had no effect up to
   $\sigma=10$\,pA\,ms$^{1/2}$. It degraded bursts progressively above that and broke the chain
   at $\sigma=160$.
 \item \textbf{Removing HVC\textsubscript{X}} entirely, a question raised in review of the
-  original, left propagation intact (16/16; 114.6/120 meeting the criterion).
+  original, left propagation intact (16/16; 115/120 meeting the criterion).
 \end{itemize}
+
+\subsection*{The Brian2 implementation reaches the same verdict (Table~\ref{tab:brian2})}
+Isolated HVC\textsubscript{X} and interneurons agree between the two codes to within 0.03\,ms
+over 1.5\,s. On a small test network, every neuron has the same spike count in both codes, and
+the remaining timing difference halves when Brian2's step is halved. Across networks, the two
+codes give the same statistics for every measure we compare with the original
+(Table~\ref{tab:brian2}). The cross-check also exposed an error of ours: the pre-stimulus
+settling had run at SciPy's default tolerance, which shifted the spontaneous
+HVC\textsubscript{X} and interneuron activity. All results reported here were rerun after the
+fix.
+
+\begin{table}[h]\small
+\caption{Original article vs our two implementations. Mean $\pm$ SD across networks: 50 wiring
+seeds (rows 1--7), 16 without HVC\textsubscript{X}, 100 runs for Fig.~12.}
+\label{tab:brian2}
+\begin{tabular}{p{0.42\linewidth}p{0.16\linewidth}p{0.16\linewidth}p{0.16\linewidth}}
+\hline
+Measure & Original & SciPy & Brian2 \\ \hline
+Chain completes, in order (Fig.~4) & yes & 50/50 & 50/50 \\
+HVC\textsubscript{RA} spikes per burst & $4.76\pm0.48$ & $3.93\pm0.12$ & $3.93\pm0.15$ \\
+HVC\textsubscript{RA} burst duration (ms) & $8.12\pm0.89$ & $8.61\pm0.35$ & $8.57\pm0.44$ \\
+HVC\textsubscript{RA} meeting the burst criterion (of 120) & 120 & $114.9\pm1.9$ & $114.9\pm2.1$ \\
+HVC\textsubscript{X} meeting the burst criterion (Figs.~7B, 10) & all & 0/2500 & 0/2500 \\
+HVC\textsubscript{X} spikes per burst (median) & 4--9 & 1 & 1 \\
+Interneuron spikes per 400\,ms (median; Figs.~7A, 8) & dense & 8 & 8 \\
+HVC\textsubscript{X} removed: chain completes & not tested & 16/16 & 16/16 \\
+Per-neuron HVC\textsubscript{X} variation: chain broken (Fig.~12) & 59/100 disrupted & 0/100 & 0/100 \\ \hline
+\end{tabular}
+\end{table}
 
 \section*{Discussion}
 
@@ -201,9 +240,12 @@ change the RA burst statistics. They could not change the HVC\textsubscript{X} l
 property of the cell model.
 
 \paragraph{Numerics.} Results depend on the integrator tolerance. At MATLAB's default
-tolerances, spike times shift by several milliseconds and half the HVC\textsubscript{RA} fail the
+tolerances, spike times shift by several milliseconds and most HVC\textsubscript{RA} fail the
 burst criterion. Since the original reports neither tolerance nor step size, some of the
-discrepancies may be numerical. We recommend reporting tolerances for conductance-based network
+discrepancies may be numerical. In addition, some network instances are chaotic: HVC\textsubscript{X}
+and interneurons that fire spontaneously amplify differences as small as $10^{-9}$\,mV. In such
+networks, individual HVC\textsubscript{X} and interneuron spike trains cannot be reproduced spike
+for spike by any implementation, and only statistics across networks are meaningful. We recommend reporting tolerances for conductance-based network
 models and checking results against a tighter setting.
 
 \paragraph{Use of the model.} The HVC\textsubscript{RA} chain is a usable, documented and tested
@@ -237,7 +279,9 @@ successive HVC\textsubscript{RA} bursts. Bars: first-spike-peak delay.}
 \includegraphics[width=0.95\linewidth]{figures/replication_fig6.png}
 \caption{(cf.\ original Fig.~6) Up-regulating $g_A$ (A, $\times$20) or $g_{SK}$ (B, $\times$15,
 the original factor) in one HVC\textsubscript{RA}, with HVC\textsubscript{INT}$\to$RA = 5\,nS.
-(A) breaks the chain at the perturbed neuron; (B) does not.}
+(A) breaks the chain at the perturbed neuron. (B) reduces the perturbed neuron's burst to a
+single spike, and the chain dies four neurons later; this happened in 1 of 8 trials (the one
+shown).}
 \label{fig:6}\end{figure}
 
 \begin{figure}[p]\centering
@@ -315,7 +359,7 @@ Transmitter release sign & $T_{max}/(1+e^{-(V_{pre}-V_T)/K_p})$ (Destexhe 1994) 
 $C_m$, $Ca_{ex}$, $k_r$, $T$ not given & Daou 2013: $C_m$ 20/100/75\,pF, 2.5\,mM, $k_r$ 0.3/0.01, $RT/F$ 25.7\,mV \\
 $V_{AMPA}$, $V_{GABA}$ not given & 0, $-80$\,mV (Destexhe 1994) \\
 Default $\bar g$ values not given & calibrated within the Fig.~13 ranges (Methods) \\
-Solver tolerances, seeds, start pulse & rtol $10^{-6}$; seeds in repository; 500\,pA, 10\,ms into HVC\textsubscript{RA}1 only \\
+Solver tolerances, seeds, start pulse & rtol $10^{-6}$, including the 500\,ms settling; seeds in repository; 500\,pA, 10\,ms into HVC\textsubscript{RA}1 only \\
 Noise ``1--5\% of the mean synaptic conductance'' (units unclear; on or off in main figures unclear) & off in main runs; amplitude swept in Robustness \\
 ODE counts 6/8/7 vs Eqs.~1--3 (5/7/7) & currents as in Eqs.~1--3 \\
 Supplementary code & network files are a template (no HVC\textsubscript{X}, no RA$\leftrightarrow$INT synapses); ODE file identical to Daou 2013 \\ \hline
