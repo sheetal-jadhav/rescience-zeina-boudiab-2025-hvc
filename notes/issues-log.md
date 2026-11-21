@@ -209,3 +209,4 @@ New or sharpened items (reported as open in the article):
 - **For our Discussion:** the reviewers asked whether removing HVC(X) changes propagation, and
   the authors didn't test it. Our no-X run answers it: no effect. The eLife assessment calls the
   work "incomplete".
+
