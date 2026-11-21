@@ -8,3 +8,6 @@ __pycache__/
 reference/
 # Bou Diab's original code stays out of the history until Phase 2 (independence protocol)
 original-code-DO-NOT-OPEN-UNTIL-PHASE-2/
+
+# Private: the user's own project notes (kept out of the public repo)
+notes/private/
