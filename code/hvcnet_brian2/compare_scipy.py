@@ -5,21 +5,23 @@ scores, and spike-by-spike timing differences for neurons with equal spike count
 Writes results/compare_brian2.jsonl.
 """
 import json
+import os
 import sys
 import time
 from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).parent))
-sys.path.insert(0, str(Path(__file__).parents[1]))
+CODE = Path(__file__).resolve().parents[1]
+os.environ.setdefault("HVC_CONFIG", str(CODE / "configs" / "final.json"))
+sys.path.insert(0, str(CODE / "scripts")); sys.path.insert(0, str(CODE))
 from calibrate_random import to_kwargs  # noqa: E402
 from phase1_seeds import CONFIG  # noqa: E402  (configs/final.json via HVC_CONFIG)
 
 import hvcnet_brian2 as hb  # noqa: E402
 from hvcnet.evaluate import score, simulate  # noqa: E402
 
-OUT = Path(__file__).resolve().parents[2] / "results" / "compare_brian2.jsonl"
+OUT = CODE.parent / "results" / "compare_brian2.jsonl"
 
 
 def compare(net, ref, other):

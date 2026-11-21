@@ -109,13 +109,19 @@ def _namespace(p, sw, kin):
 
 def simulate(spec=NetworkSpec(), seed=0, overrides=None, switches=Switches(), t_end=400.0,
              kick=(50.0, 60.0, 500.0), t_settle=500.0, dt=0.01, gating=None, kinetics=None,
-             per_neuron=None, target="cython"):
+             per_neuron=None, target="auto"):
     """Same protocol as hvcnet.evaluate.simulate: settle, pulse into RA1, run t_end (ms).
     Returns (net, spikes) with spikes[i] an array of spike times (ms, from the end of settling)."""
+    net = configure(spec, seed, overrides, kinetics, per_neuron)
+    return net, run_net(net, switches, t_end, kick, t_settle, dt, gating, target)
+
+
+def run_net(net, switches=Switches(), t_end=400.0, kick=(50.0, 60.0, 500.0), t_settle=500.0,
+            dt=0.01, gating=None, target="auto"):
+    """Run any object with `cells`, `synapses` and `first_ra` (the neuron that gets the kick)."""
     b2.start_scope()
     b2.prefs.codegen.target = target
     b2.defaultclock.dt = dt * ms
-    net = configure(spec, seed, overrides, kinetics, per_neuron)
     c, syn = net.cells, net.synapses
     p = replace(Gating(), **(gating or {}))
     ns = _namespace(p, switches, syn.kin)
@@ -163,5 +169,4 @@ def simulate(spec=NetworkSpec(), seed=0, overrides=None, switches=Switches(), t_
 
     trains = mon.spike_trains()
     spikes = [np.asarray(trains[i] / ms) - t0 for i in range(c.N)]
-    spikes = [s[s >= 0] for s in spikes]
-    return net, spikes
+    return [s[s >= 0] for s in spikes]

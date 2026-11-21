@@ -18,7 +18,7 @@ in `article/`.
 - `code/hvcnet/`: the model library (cells, synapses, network builder, RK45/RK4 integrators,
   analysis)
 - `code/hvcnet_brian2/`: an independent second implementation of the same model in Brian2,
-  used to cross-check the first (`code/scripts/compare_brian2.py`)
+  with its own README, requirements and `run_all.sh` (optional; see below)
 - `code/scripts/`: one script per experiment or figure
 - `code/configs/`: the frozen Phase-1 configuration and the final configuration
 - `code/tests/`: unit tests (`pytest`)
@@ -41,12 +41,19 @@ not redistributed here. Get them from the publishers.
 
 ```sh
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest code/tests        # 9 tests (Brian2 test needs a C compiler)
+.venv/bin/python -m pytest code/tests        # 8 tests (+1 if Brian2 is installed)
 sh code/scripts/run_final.sh                 # calibration, robustness, Figs 5, 6, 9, 11 (hours)
 cd code && ../.venv/bin/python -I scripts/fig12.py && ../.venv/bin/python -I scripts/fig13_fine_rara.py
 ../.venv/bin/python -I scripts/fig2_pairs.py && ../.venv/bin/python -I scripts/article_figures.py
 ../.venv/bin/python -I scripts/make_figures.py
 ../.venv/bin/python -I scripts/daou13_xcell.py   # needs Daou 2013 XPP files in reference/
+```
+
+**Brian2 implementation (optional):** see `code/hvcnet_brian2/README.md`.
+
+```sh
+.venv/bin/pip install -r code/hvcnet_brian2/requirements.txt
+sh code/hvcnet_brian2/run_all.sh             # test, cross-check, scored against the paper (~30 min)
 ```
 
 ## Independence protocol 
@@ -65,8 +72,8 @@ cd code && ../.venv/bin/python -I scripts/fig12.py && ../.venv/bin/python -I scr
 - **Python 3 + NumPy + SciPy.** The main integrator is `scipy.integrate.solve_ivp(method="RK45")`.
   That is the same Dormand-Prince 4(5) pair as MATLAB `ode45`, so solver differences can be
   tested cleanly. A fixed-step RK4 (0.01 and 0.025 ms) is used as a check.
-- One vectorised right-hand side for the whole network (~2000 state variables). Brian2 is a
-  possible later port if speed is a problem.
+- One vectorised right-hand side for the whole network (~2000 state variables).
+- A second implementation in Brian2 (`code/hvcnet_brian2/`) cross-checks the first.
 - `requirements.txt` pins versions.
 
 ## Target figures

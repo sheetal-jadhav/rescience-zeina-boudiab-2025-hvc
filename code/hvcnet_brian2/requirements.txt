@@ -1,0 +1,5 @@
+-r ../../requirements.txt
+brian2==2.11.0
+cython==3.3.1
+sympy==1.14.0
+setuptools==84.2.1

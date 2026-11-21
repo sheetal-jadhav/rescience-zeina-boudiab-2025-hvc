@@ -226,3 +226,16 @@ New or sharpened items (reported as open in the article):
 - **Fix:** `settle()` now defaults to rtol 1e-6, atol 1e-9. All article results were rerun with
   `code/scripts/run_rerun_settle.sh`. The configuration `configs/final.json` was kept as
   selected; its calibration ran with the old settling.
+- **Cross-check on full networks (5 seeds, `results/compare_brian2.jsonl`):** the chain propagates
+  in all runs. Burst statistics agree in 4/5 seeds. For seed 1, Brian2 converges with dt to
+  3.41 spikes per burst, against SciPy's 3.94.
+- **Cause: chaos, not a coding difference.**
+  - Isolated X and INT cells agree to within 0.03 ms in both codes.
+  - During settling, 100/220 neurons fire spontaneously (an X <-> INT loop). The two codes match
+    spike for spike until ~190 ms, when an X rebound spike amplifies a 0.02 ms input difference
+    to 0.4 ms.
+  - Perturbing only the SciPy initial voltages by 1e-9 mV reproduces Brian2's outcomes exactly
+    (3.30 or 3.41 spikes per burst; ~100/220 neurons keep their spike counts).
+  - So individual X/INT spike trains, and per-seed RA burst statistics in such networks, are
+    not reproducible spike for spike. Comparisons must be statistical, across seeds
+    (`code/scripts/brian2_vs_paper.py`).
