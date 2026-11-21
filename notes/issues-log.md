@@ -188,3 +188,24 @@ Question: did Bou Diab run the network with Daou 2013's complete cells (with I_N
 ~5 spikes in ~10 ms, ~500 Hz). Its maximum is ~100 Hz, and brief inhibition gives no rebound.
 I_NaP/I_KNa barely matter. So "they used the 2013 cells unchanged" doesn't explain Figs 7B/10.
 The X phenotype in the paper needs parameters that appear in neither paper nor either code base.
+
+## Full re-read of the paper, including reviews and author response (2026-11-21)
+New or sharpened items (reported as open in the article):
+- **I-13 sharpened:** the ODE counts (RA 6, X 8, INT 7) vs eqs 1-3 (5, 7, 7) imply one extra
+  state each in RA and X. That fits RA with I_CaT (rT; Daou13 RA gCaT 0.55) and X with I_A (e;
+  Daou13 X gA 5). INT matches. This can't explain X bursting (I_A lowers excitability).
+- **I-20:** conductance heterogeneity is contradictory. Results: "maximal conductances … for
+  each model neuron … are all selected randomly". Methods: manually chosen defaults, varied at
+  the population and single-neuron level, and X shared.
+- **I-21:** the author response says the noise is on in the main simulations ("our model does,
+  in fact, include a stochastic current") and that the start input goes to "a small HVC(RA)"
+  group of one microcircuit. The Results say only HVC(RA)1.
+- **I-22:** HVC(X) homogeneity is justified by Daou & Margoliash 2020 (Nat Commun 11:1964). The
+  X parameters may come from those fits, not Daou 2013. No public code or parameter table found.
+- **I-23:** the Fig 2 synaptic calibration was done by eye from published figures (author
+  response), so there is no objective to reproduce.
+- **Minor:** Fig 7B says X fire "2-4" bursts, while Methods and Discussion say 1-4. The Fig 10
+  text says "HVCX1" for HVCX3.
+- **For our Discussion:** the reviewers asked whether removing HVC(X) changes propagation, and
+  the authors didn't test it. Our no-X run answers it: no effect. The eLife assessment calls the
+  work "incomplete".
