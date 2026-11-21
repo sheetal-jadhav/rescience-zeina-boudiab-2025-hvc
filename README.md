@@ -1,4 +1,4 @@
-# [¬Re] Biophysical network modeling of sequence propagation in HVC
+# [Re] Biophysical network modeling of sequence propagation in HVC
 
 Independent replication, for [ReScience C](https://rescience.github.io/), of **Bou Diab Z,
 Chammas M, Daou A (2025). Biophysical network modeling of temporal and stereotyped sequence
@@ -30,6 +30,7 @@ in `article/`.
   - `phase1-report.md`, `phase2-report.md`
   - `replication-results.md`: per-figure verdicts
 - `article/`: ReScience C LaTeX source
+- `LICENSE`: MIT (code)
 
 The original article's PDF, figures and supplementary code, and Daou et al. (2013)'s code, are
 not redistributed here. Get them from the publishers.

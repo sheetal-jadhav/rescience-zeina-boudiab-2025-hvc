@@ -4,8 +4,8 @@
 # Title of the article:
 #  - For a successful replication, it should be prefixed with "[Re]"
 #  - For a failed replication, it should be prefixed with "[¬Re]"
-#  Partial replication: the HVC(RA) chain reproduces, the HVC(X)/interneuron results do not -> [¬Re]
-title: "[¬Re] Biophysical network modeling of temporal and stereotyped sequence propagation of neural activity in the premotor nucleus HVC"
+#  Partial replication (HVC(RA) chain reproduces; HVC(X)/interneuron results do not); author chose [Re]
+title: "[Re] Biophysical network modeling of temporal and stereotyped sequence propagation of neural activity in the premotor nucleus HVC"
 
 authors:
   - name: Sheetal Jadhav
