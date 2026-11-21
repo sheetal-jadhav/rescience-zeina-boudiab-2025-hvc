@@ -27,6 +27,11 @@ We worked in two phases, each closed by a git tag before the next began:
   recorded (tag \texttt{phase1-complete}).
 \item \textbf{Comparison with the supplementary code} (tag \texttt{phase2-complete}).
 \end{enumerate}
+The replication therefore tests what can be reproduced from the published description: the
+article, its supplement and the work it cites. We did not use unpublished information from the
+original authors. We also searched ModelDB, GitHub, Zenodo, Figshare, OSF and the authors' lab
+website for the network code, which the article says will be deposited on ModelDB, and did not
+find it.
 Every parameter is tagged in the code with its source: the article, Daou 2013 text, Daou 2013
 code, or our choice.
 
@@ -49,7 +54,9 @@ network is built by the article's rules. Open choices are listed in Table~\ref{t
 \item interneuron inputs are drawn from the whole HVC\textsubscript{RA} pool;
 \item the sequence starts with a 500\,pA, 10\,ms pulse into the first HVC\textsubscript{RA}.
 \end{itemize}
-Code: TODO (repository URL).
+Code, configurations, raw results and the full issues log are at
+\url{https://github.com/GITHUB_USER/rescience-boudiab-hvc}. All tests (\texttt{pytest}) and
+figures can be regenerated with the scripts in \texttt{code/scripts} (order in the README).
 
 \subsection*{Parameters not given in the article}
 The article gives the variable conductances only as allowed ranges (Fig.~13). We sampled 200
@@ -79,7 +86,7 @@ as the original text states. The original Fig.~5A legend shows the opposite. Rai
 10 to 13\,nS lengthened the delay by only 0.2\,ms, against $\sim$3.6\,ms in the original, and the
 postsynaptic burst had 1--2 spikes rather than $\sim$6 (Fig.~\ref{fig:5}).
 
-\subsection*{HVC\textsubscript{X} and interneuron firing are not reproduced (Figs.~7, 8, 10)}
+\subsection*{HVC\textsubscript{X} and interneuron firing are not reproduced from the published description (Figs.~7, 8, 10)}
 Across 200 calibration runs inside the published ranges, every equation variant found in the
 supplementary code, and capacitance variations, HVC\textsubscript{X} never fired multi-spike
 rebound bursts. They fired single rebound spikes, and 27 of 50 were silent
@@ -90,8 +97,19 @@ In isolation, our HVC\textsubscript{X} model cannot fire faster than $\sim$160\,
 original Fig.~10 shows rebound bursts at $\sim$500\,Hz. An exploratory test of single changes,
 far outside the published values, also produced no bursts: faster $I_{CaT}$ de-inactivation, a
 hyperpolarising bias current, 3$\times$ stronger interneuron drive, and 6$\times$ stronger or
-8$\times$ longer inhibition. This points to an HVC\textsubscript{X} cell model different from the
-one specified.
+8$\times$ longer inhibition.
+
+The supplementary single-cell file contains two currents that the article says were removed
+($I_{NaP}$, $I_{KNa}$), so we also tested the complete HVC\textsubscript{X} model of Daou et
+al.\supercite{Daou2013}, read directly from its published XPP files. It fired at most
+$\sim$100\,Hz (37\,Hz for the published 150\,pA step) and 60--86\,Hz after release from a long
+hyperpolarisation. It gave no rebound at all after a 50\,ms hyperpolarising pulse, which mimics
+an inhibitory volley (\texttt{code/scripts/daou13\_xcell.py}). Neither the published reduced
+cell nor the full 2013 cell produces the original's HVC\textsubscript{X} phenotype. The
+HVC\textsubscript{X} parameters used in the original network therefore appear to differ from all
+published ones. One possible source is the fits of Daou \& Margoliash\supercite{DaouMargoliash2020},
+which the article cites to justify identical HVC\textsubscript{X} properties, but those
+parameters are not reported.
 
 \subsection*{The sequence is far more robust to single-neuron changes than reported (Figs.~6, 9, 11, 12)}
 \begin{itemize}
@@ -136,9 +154,62 @@ Varying one conductance at a time (Fig.~\ref{fig:13}):
 \end{itemize}
 
 \section*{Discussion}
-TODO: what is and isn't reproducible; the documentation problems
-(errors in Appendix~1, unreported parameters, supplementary code that does not implement the
-network); the sensitivity to solver tolerance; and what the HVC\textsubscript{X} result implies.
+
+\paragraph{What reproduces.} The core mechanism reproduces from the text plus Daou et
+al.\supercite{Daou2013}: a chain of single-compartment HVC\textsubscript{RA} neurons coupled by
+AMPA synapses propagates sparse, stereotyped bursts. This holds in every random network instance
+we built, for every equation variant we tried, and with HVC\textsubscript{X} removed. The narrow
+working window for HVC\textsubscript{RA}$\to$HVC\textsubscript{RA} conductance also reproduces,
+within 1\,nS.
+
+\paragraph{What does not.} The parts of the original that involve HVC\textsubscript{X} and
+interneurons do not reproduce from the published description:
+\begin{itemize}
+\item HVC\textsubscript{X} rebound bursts (Figs.~7B, 10);
+\item dense interneuron bursting (Figs.~7A, 8);
+\item the paired-recording calibration (Fig.~2);
+\item the fragility of the sequence to single-neuron changes in interneurons and
+  HVC\textsubscript{X} (Figs.~9, 11, 12).
+\end{itemize}
+The HVC\textsubscript{X} result is the clearest. Neither the published reduced cell nor the full
+2013 cell can fire $\sim$500\,Hz rebound bursts, whatever the network input. The original's
+HVC\textsubscript{X} must therefore rest on unreported parameters. Because the breaks in Figs.~9,
+11 and 12 run through over-active interneurons driven by HVC\textsubscript{X}, those results
+inherit the same gap. In our model, HVC\textsubscript{X} and interneurons have little influence on
+the HVC\textsubscript{RA} chain. Removing HVC\textsubscript{X}, a test requested in review of the
+original, changes nothing. The original's claim that all three classes are ``equally important
+forces'' in propagation is therefore not supported by the model as published.
+
+\paragraph{Documentation.} Reproducing the article required:
+\begin{itemize}
+\item correcting several equations in Appendix~1 (Table~\ref{tab:issues});
+\item taking capacitances, reversal potentials and gating forms from Daou et
+  al.\supercite{Daou2013};
+\item choosing every default conductance ourselves, because only allowed ranges are published.
+\end{itemize}
+The supplementary ``network'' code is a template, not the code behind the figures. The article
+is also internally inconsistent in places:
+\begin{itemize}
+\item cell composition: the stated ODE counts (6/8/7) do not match Eqs.~1--3 (5/7/7);
+\item whether conductances vary per neuron;
+\item how the sequence is started;
+\item whether noise is present in the main figures.
+\end{itemize}
+Because only ranges are published, an infinite family of models satisfies the description. Our
+calibrated configuration is one member of it, and different choices within the ranges could
+change the RA burst statistics. They could not change the HVC\textsubscript{X} limit, which is a
+property of the cell model.
+
+\paragraph{Numerics.} Results depend on the integrator tolerance. At MATLAB's default
+tolerances, spike times shift by several milliseconds and half the HVC\textsubscript{RA} fail the
+burst criterion. Since the original reports neither tolerance nor step size, some of the
+discrepancies may be numerical. We recommend reporting tolerances for conductance-based network
+models and checking results against a tighter setting.
+
+\paragraph{Use of the model.} The HVC\textsubscript{RA} chain is a usable, documented and tested
+starting point for biophysical HVC modelling. Conclusions involving HVC\textsubscript{X} or
+interneuron firing patterns should not be drawn from it until a cell model that reproduces
+HVC\textsubscript{X} rebound bursting is specified and validated against slice recordings.
 
 % ------------------------------------------------------------------ figures
 \begin{figure}[p]\centering
@@ -244,10 +315,15 @@ Transmitter release sign & $T_{max}/(1+e^{-(V_{pre}-V_T)/K_p})$ (Destexhe 1994) 
 $C_m$, $Ca_{ex}$, $k_r$, $T$ not given & Daou 2013: $C_m$ 20/100/75\,pF, 2.5\,mM, $k_r$ 0.3/0.01, $RT/F$ 25.7\,mV \\
 $V_{AMPA}$, $V_{GABA}$ not given & 0, $-80$\,mV (Destexhe 1994) \\
 Default $\bar g$ values not given & calibrated within the Fig.~13 ranges (Methods) \\
-Solver tolerances, seeds, start pulse & rtol $10^{-6}$; seeds in repository; 500\,pA, 10\,ms \\
+Solver tolerances, seeds, start pulse & rtol $10^{-6}$; seeds in repository; 500\,pA, 10\,ms into HVC\textsubscript{RA}1 only \\
+Noise ``1--5\% of the mean synaptic conductance'' (units unclear; on or off in main figures unclear) & off in main runs; amplitude swept in Robustness \\
+ODE counts 6/8/7 vs Eqs.~1--3 (5/7/7) & currents as in Eqs.~1--3 \\
 Supplementary code & network files are a template (no HVC\textsubscript{X}, no RA$\leftrightarrow$INT synapses); ODE file identical to Daou 2013 \\ \hline
 \end{tabular}
 \end{table}
 
 \section*{Acknowledgements}
-TODO.
+We thank the authors of the original article for publishing it with open review, and Daou et
+al.\ for making their 2013 single-cell code available. This work received no funding. Code was
+written and analyses were run with the assistance of an AI coding assistant (Claude, Anthropic).
+The author checked and takes responsibility for all code, results and text.

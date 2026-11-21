@@ -4,24 +4,24 @@
 # Title of the article:
 #  - For a successful replication, it should be prefixed with "[Re]"
 #  - For a failed replication, it should be prefixed with "[¬Re]"
-#  TODO(author): decide [Re] vs [¬Re] for a partial replication (see notes/replication-results.md)
-title: "[Re] Biophysical network modeling of temporal and stereotyped sequence propagation of neural activity in the premotor nucleus HVC"
+#  Partial replication: the HVC(RA) chain reproduces, the HVC(X)/interneuron results do not -> [¬Re]
+title: "[¬Re] Biophysical network modeling of temporal and stereotyped sequence propagation of neural activity in the premotor nucleus HVC"
 
 authors:
   - name: Sheetal Jadhav
-    orcid: TODO
-    email: TODO
+    orcid: 0000-0001-6942-7748
+    email: 31jsheetal@gmail.com
     affiliations: 1,*
 
 affiliations:
   - code:    1
-    name:    TODO
-    address: TODO
+    name:    Independent Researcher
+    address: ""
 
 keywords: rescience c, replication, songbird, HVC, Hodgkin-Huxley, sequence generation, python
 
 code:
-  - url: TODO (public GitHub repository)
+  - url: https://github.com/GITHUB_USER/rescience-boudiab-hvc
   - doi:
   - swh:
 
@@ -35,7 +35,7 @@ replication:
  - url:  https://elifesciences.org/articles/105526
  - doi:  10.7554/eLife.105526
 
-abstract: "TODO: write last."
+abstract: "Bou Diab, Chammas and Daou (2025, eLife) proposed a conductance-based network model of the songbird premotor nucleus HVC. Its three neuron classes, HVC(RA), HVC(X) and interneurons, are arranged as a chain of microcircuits with structured inhibition. We reimplemented the model independently in Python from the article, its supplement and the work it cites. Sparse, stereotyped propagation of HVC(RA) bursts reproduces in 50 of 50 random networks (3.95 spikes per burst, against 4.76 in the original), as does the narrow working window of the HVC(RA)-to-HVC(RA) conductance. The HVC(X) rebound bursts, dense interneuron firing, paired-recording calibration and sensitivity of the sequence to single-neuron changes do not reproduce from the published description. Neither the published HVC(X) cell nor the complete cell model it derives from can fire the original's ~500 Hz rebound bursts. The supplementary code does not implement the network, several equations in the appendix need correction, and default conductances are not reported. Results are also sensitive to integrator tolerance. We provide a tested open-source implementation, a log of all corrections and choices, and robustness analyses, including removal of HVC(X), which leaves propagation intact."
 
 bibliography: bibliography.bib
 
@@ -65,7 +65,7 @@ contributors:
 
 # This information will be provided by the editor
 dates:
-  - received:  November 1, 2018
+  - received:
   - accepted:
   - published: 
 

@@ -11,3 +11,6 @@ original-code-DO-NOT-OPEN-UNTIL-PHASE-2/
 
 # Private: the user's own project notes (kept out of the public repo)
 notes/private/
+
+# Large raw traces from daou13_xcell.py (summary is in results/daou13_xcell.jsonl)
+results/*.npy
