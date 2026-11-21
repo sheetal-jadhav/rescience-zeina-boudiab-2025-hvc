@@ -28,8 +28,10 @@ The steps can also be run one at a time:
 | `.venv/bin/python code/hvcnet_brian2/summarize.py` | table: original paper vs SciPy vs Brian2 | `results/brian2_vs_paper.md` |
 
 **Compiler:** Brian2 generates and compiles C code when a C compiler is available (Xcode
-Command Line Tools on macOS, `gcc` on Linux). A network run then takes ~15 s at dt 0.01 ms.
-Without a compiler it falls back to pure NumPy, which gives the same results more slowly.
+Command Line Tools on macOS: `xcode-select --install`; `gcc` on Linux). A full network run then
+takes ~15 s at dt 0.01 ms. Without a compiler, Brian2 falls back to pure NumPy. That gives
+identical spike times (checked on the test network) but is about 15× slower: ~2.5 min for the
+20-neuron test. The full `run_all.sh` is impractical that way, so install a compiler first.
 
 **Use from Python:**
 
