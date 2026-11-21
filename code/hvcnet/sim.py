@@ -66,10 +66,12 @@ def run_rk4(model, y0, t_end, dt=0.01, dt_out=0.025, rng=None):
     return {"t": t_out, "V": V_out, "y_end": y, "n_steps": n_steps}
 
 
-def settle(model, y0, t_settle=1000.0):
-    """Run without stimulus so slow gates (rs, rT, Ca) reach rest; returns the end state."""
+def settle(model, y0, t_settle=1000.0, rtol=1e-6, atol=1e-9):
+    """Run without stimulus so slow gates (rs, rT, Ca) reach rest; returns the end state.
+    Tight tolerances by default: spontaneously firing HVC(X) and interneurons keep firing while
+    settling, and their phase at the end depends on the tolerance (found by the Brian2 check)."""
     stim, model.stimulus = model.stimulus, None
     try:
-        return run_rk45(model, y0, t_settle, dt_out=t_settle)["y_end"]
+        return run_rk45(model, y0, t_settle, dt_out=t_settle, rtol=rtol, atol=atol)["y_end"]
     finally:
         model.stimulus = stim

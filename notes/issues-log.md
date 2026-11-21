@@ -210,3 +210,19 @@ New or sharpened items (reported as open in the article):
   the authors didn't test it. Our no-X run answers it: no effect. The eLife assessment calls the
   work "incomplete".
 
+
+## Second implementation in Brian2, and a settling-tolerance fix (2026-11-21)
+- **`code/hvcnet_brian2/`:** the same model, rewritten in Brian2 2.11 equation syntax with units
+  (RK4, Cython code generation). Shared with `hvcnet`: parameter dataclasses and network wiring
+  only. Test: `code/tests/test_brian2.py`.
+- **Found by the cross-check:** `sim.settle()` ran the 500 ms pre-stimulus settling at SciPy's
+  default tolerance (rtol 1e-3), not 1e-6. HVC(X) and interneurons that fire spontaneously keep
+  firing while settling, so their spike times at the start of each run depended on that
+  tolerance. On the 20-neuron test network:
+  - with loose settling, 3/20 neurons had different spike counts in Brian2, by up to 6.8 ms,
+    and the difference didn't shrink with Brian2's dt;
+  - with tight settling, 20/20 counts match, and the maximum timing difference is 0.35 ms at
+    dt 0.01 and 0.19 ms at dt 0.005 (first-order convergence).
+- **Fix:** `settle()` now defaults to rtol 1e-6, atol 1e-9. All article results were rerun with
+  `code/scripts/run_rerun_settle.sh`. The configuration `configs/final.json` was kept as
+  selected; its calibration ran with the old settling.

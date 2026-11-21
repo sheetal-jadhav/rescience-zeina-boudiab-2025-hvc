@@ -17,6 +17,8 @@ in `article/`.
 
 - `code/hvcnet/`: the model library (cells, synapses, network builder, RK45/RK4 integrators,
   analysis)
+- `code/hvcnet_brian2/`: an independent second implementation of the same model in Brian2,
+  used to cross-check the first (`code/scripts/compare_brian2.py`)
 - `code/scripts/`: one script per experiment or figure
 - `code/configs/`: the frozen Phase-1 configuration and the final configuration
 - `code/tests/`: unit tests (`pytest`)
@@ -39,7 +41,7 @@ not redistributed here. Get them from the publishers.
 
 ```sh
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest code/tests        # 8 tests
+.venv/bin/python -m pytest code/tests        # 9 tests (Brian2 test needs a C compiler)
 sh code/scripts/run_final.sh                 # calibration, robustness, Figs 5, 6, 9, 11 (hours)
 cd code && ../.venv/bin/python -I scripts/fig12.py && ../.venv/bin/python -I scripts/fig13_fine_rara.py
 ../.venv/bin/python -I scripts/fig2_pairs.py && ../.venv/bin/python -I scripts/article_figures.py

@@ -20,6 +20,17 @@ def simulate(spec=NetworkSpec(), seed=0, overrides=None, switches=Switches(), t_
     `per_neuron` maps Cells attribute -> {neuron index: ("set"|"mul", value)} (Figs 6/9/11).
     Default tolerances rtol 1e-6 / atol 1e-9: MATLAB's ode45 defaults (1e-3/1e-6) shift spike
     times by up to ~6 ms along the chain (results/robust_solver.jsonl)."""
+    net = configure(spec, seed, overrides, kinetics, per_neuron)
+    m = Model(net.cells, net.synapses, gating=replace(Gating(), **(gating or {})),
+              switches=switches)
+    y0 = settle(m, m.initial_state(), 500.0)
+    m.stimulus = pulses(net.cells.N, [(net.first_ra, *kick)])
+    r = run_rk45(m, y0, t_end, rtol=rtol, atol=atol)
+    return net, r, spike_times(r["t"], r["V"])
+
+
+def configure(spec=NetworkSpec(), seed=0, overrides=None, kinetics=None, per_neuron=None):
+    """Build the network and apply parameter overrides (shared by the SciPy and Brian2 runs)."""
     net = build(spec, seed=seed)
     if kinetics:
         s = net.synapses
@@ -32,12 +43,7 @@ def simulate(spec=NetworkSpec(), seed=0, overrides=None, switches=Switches(), t_
         arr = getattr(net.cells, name)
         for idx, (op, val) in per_idx.items():
             arr[idx] = arr[idx] * val if op == "mul" else val
-    m = Model(net.cells, net.synapses, gating=replace(Gating(), **(gating or {})),
-              switches=switches)
-    y0 = settle(m, m.initial_state(), 500.0)
-    m.stimulus = pulses(net.cells.N, [(net.first_ra, *kick)])
-    r = run_rk45(m, y0, t_end, rtol=rtol, atol=atol)
-    return net, r, spike_times(r["t"], r["V"])
+    return net
 
 
 def score(net, sp):
