@@ -169,3 +169,22 @@ parameters (gK 80 nS, no I_KNa), X can't fire above ~160 Hz (f-I test), whereas 
 X rebound bursts of ~5 spikes in ~10 ms (~500 Hz). The published X burst phenotype implies an
 X cell different from the one specified in the text plus Daou 2013. Next: single-cell X
 rebound tests (which intrinsic parameters allow high-frequency rebound bursts).
+
+## Test: full Daou 2013 HVC(X) cell (2026-11-21)
+Question: did Bou Diab run the network with Daou 2013's complete cells (with I_NaP, I_KNa)?
+`code/scripts/daou13_xcell.py` reads parameters straight from Daou 2013's XPP files
+(`results/daou13_xcell.jsonl`).
+
+| Case | Spikes | Max rate |
+|---|---|---|
+| Figure_4.ode, +150 pA (as published) | 12 in 485 ms | 37 Hz |
+| Figure_4.ode, +400 pA | 33 | 102 Hz |
+| Figure_7.ode rebound, −120 pA 700 ms (as published, gK 1700) | 4 | 60 Hz |
+| same, gK 50 / gK 80 | 8 / 7 | 86 / 83 Hz |
+| Figure_4.ode, 50 ms −120 or −300 pA (IPSP-like) | 0 | none |
+| Reduced (no NaP/KNa, gK 80) rebound | 7 | 78 Hz |
+
+**Result: the full Daou 2013 X cell can't fire Bou Diab's rebound bursts either** (Fig 10:
+~5 spikes in ~10 ms, ~500 Hz). Its maximum is ~100 Hz, and brief inhibition gives no rebound.
+I_NaP/I_KNa barely matter. So "they used the 2013 cells unchanged" doesn't explain Figs 7B/10.
+The X phenotype in the paper needs parameters that appear in neither paper nor either code base.
