@@ -126,6 +126,25 @@ lasted $8.61\pm0.35$\,ms, against $4.76\pm0.48$ and $8.12\pm0.89$\,ms in the ori
 average 115 of 120 HVC\textsubscript{RA} met the article's burst criterion. Successive neurons
 fired 1.96\,ms apart.
 
+The burst statistics do not match both original values at once. In our model, burst size and
+duration move together: across 200 configurations inside the published ranges they correlate at
+0.99, and configurations with the original's $\sim$4.8 spikes last $\sim$11.5\,ms
+(Fig.~\ref{fig:4tradeoff}A). Our spikes are $\sim$2.9\,ms apart within a burst, against
+$\sim$2.2\,ms in the original. Neither the start pulse nor the wiring explains this. Once the first
+neuron bursts, the chain settles at $\sim$4 spikes per burst within two or three links for any
+start pulse from 250 to 800\,pA (with 150\,pA, the Fig.~2 amplitude, single spikes propagate
+instead). The Fig.~2 pair conductances and the stated wiring rules change burst size by less than
+0.1 spike. The wiring does not enforce the stated rule that no inhibition reaches an
+HVC\textsubscript{RA} neuron during its burst: interneurons receive input from any microcircuit,
+and in one network 31\% of interneuron$\to$RA synapses deliver inhibition during the target's
+burst. Of the spike-shaping parameters we tested, only the HVC\textsubscript{RA} capacitance,
+which the original does not report, shortens the interval within bursts. With 16\,pF instead of
+the 20\,pF of Daou et al.\supercite{Daou2013}, and $g_{SK}$ and $g_A$ at the top of their published
+ranges, bursts had $4.34\pm0.21$ spikes and lasted $9.01\pm0.66$\,ms (10 networks), both within
+one standard deviation of the original, and successive neurons fired 1.64\,ms apart. The cost is
+that only 78 of 120 HVC\textsubscript{RA} met the burst criterion (Fig.~\ref{fig:4tradeoff}B).
+We therefore keep 20\,pF for all figures and report this as a sensitivity result.
+
 \subsection*{Inter-burst delay is reproduced in direction only (Fig.~5)}
 Raising $g_{AMPA}$ from 10 to 12\,nS shortened the delay from 5.6 to 4.6\,ms and added a spike,
 as the original text states. The original Fig.~5A legend shows the opposite. Raising $g_A$ from
@@ -309,6 +328,17 @@ bars as in the original panels. Postsynaptic spikes taller than three scale bars
 order, after a pulse into the first neuron (seed 0). Inset: two successive neurons (boxed) and
 the delay between their first spikes.}
 \label{fig:4}\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=\linewidth]{figures/article_fig4_tradeoff.png}
+\caption{Fig.~4 burst statistics and the HVC\textsubscript{RA} capacitance. (A) Spikes per burst
+against burst duration. Grey: 200 configurations inside the published ranges with $C_m=20$\,pF.
+Coloured: full-network grid over $C_m$ 14--18\,pF, $g_{SK}$ 11--12.5\,nS and $g_A$ 5--14\,nS (2
+networks each). Square: the final configuration (50 networks). Diamond: $C_m=16$\,pF,
+$g_{SK}=12.5$, $g_A=14$\,nS (10 networks). Star: the original (mean $\pm$ SD). (B) Delay between
+neighbouring HVC\textsubscript{RA} bursts against the number of HVC\textsubscript{RA} meeting the
+burst criterion, for the same grid. Dashed line: the original raster's slope.}
+\label{fig:4tradeoff}\end{figure}
 
 \begin{figure}[p]\centering
 \includegraphics[width=0.95\linewidth]{figures/replication_fig5.png}

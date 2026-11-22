@@ -49,6 +49,11 @@ cd code && ../.venv/bin/python -I scripts/fig12.py && ../.venv/bin/python -I scr
 ../.venv/bin/python -I scripts/fig2_pairs_mp.py         # pairs with fitted synapses (article Fig 2)
 ../.venv/bin/python -I scripts/fig2_single_cells.py     # stimulated cells alone; authors' code protocols
 ../.venv/bin/python -I scripts/fig2_cell_excitability.py  # port of the authors' Fig 2 cell code
+# Fig 4 burst statistics: start pulse, Fig 2 synapses, RA capacitance (sensitivity, not adopted)
+../.venv/bin/python -I scripts/fig4_mp_test.py && ../.venv/bin/python -I scripts/fig4_burst_isi.py
+../.venv/bin/python -I scripts/fig4_cm_grid.py && ../.venv/bin/python -I scripts/fig4_cm_network.py
+../.venv/bin/python -I scripts/fig4_cm_network_grid.py && ../.venv/bin/python -I scripts/fig4_cm16_confirm.py
+../.venv/bin/python -I scripts/fig4_tradeoff_plot.py
 ../.venv/bin/python -I scripts/make_figures.py
 ../.venv/bin/python -I scripts/daou13_xcell.py   # needs Daou 2013 XPP files in reference/
 ```

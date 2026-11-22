@@ -297,3 +297,40 @@ New or sharpened items (reported as open in the article):
   every pulse; C2 X IPSP 6.4 mV (2 INT spikes); D2 X -10.5 mV and a 5-spike rebound burst.
 - Figure: `figures/replication_fig2_pairs.png` (left stated, right M&P), replaces the single-cell
   figure in the article. Each trace has its own scale bar as in the original.
+
+## Fig 4 burst statistics: start pulse, wiring and RA capacitance (2026-11-22/23)
+Original: 4.76 +- 0.48 spikes per burst, 8.12 +- 0.89 ms. Final config: 3.93 / 8.61 ms (50 seeds).
+- **Start pulse (I-07), `scripts/fig4_mp_test.py`:** the chain converges to ~4 spikes per burst
+  within 2-3 links whenever RA1 fires >= 2 spikes (250-800 pA: 3.98). With the Fig 2 M&P
+  amplitude (150 pA) RA1 fires once and **single spikes propagate through all 120 RA**, unlike
+  Fig 4; so the M&P amplitude is Fig 2 only and the network keeps 500 pA.
+- **Fig 2 pair synapses in the network** (RA->INT 25 or 7.4, X->INT 11, INT->X 10 nS): 3.87-3.96
+  spikes per burst; no effect.
+- **I-25 (new): "rules of engagement" not guaranteed by the stated wiring.** The paper says it
+  ensures "no inhibition arrives to any HVC(RA) neuron while it's eliciting its burst", but
+  INTs take RA input from any microcircuit, so excluding the INT's own microcircuit does not
+  ensure it. Seed 0: 28% of INT->RA synapses target a microcircuit that also drives that INT;
+  31% deliver inhibition during (or <= 3 ms before) the target burst. Effect on burst size is
+  small (3.93 vs 4.00 spikes) because g_INT->RA is 2.8 nS. The rule behind "ensure" is not stated.
+- **Wiring otherwise matches the Methods** (counts, chain, last->first, INT->RA other MCs, X<->INT
+  own MC). Gaps: I-10 (totals), I-11 (RA->INT own/other split; we draw from the whole pool).
+- **Diagnosis:** across 200 calibration runs (Cm 20 pF) spikes per burst and duration correlate
+  0.99; median 4.78 spikes but then ~11.5 ms and few RA meet the <= 10 ms criterion. Our
+  within-burst interval is ~2.9 ms vs ~2.2 ms in the original (4.76 spikes in 8.12 ms).
+- **What sets the interval** (15-RA chain, `scripts/fig4_burst_isi.py`, reproduces the network
+  baseline 4.00 / 8.49 ms / 2.83 ms): only Cm shortens it (15 pF 2.44, 10 pF 2.07 ms); tau_n,
+  tau_h, gK, gNa, alpha_h offset 50 and RTF 26.7 do not (2.7-3.4 ms); constant tau_n 10 gives
+  single spikes. Cm is unreported (I-01; Daou13 20 pF).
+- **Full-network grid** (`scripts/fig4_cm_network_grid.py`; Cm 14-18 x gSK 11-12.5 x gA 5-14,
+  2 seeds; the chain over-predicted burst shortening at low Cm): spikes vs duration still
+  correlate 0.98. One point within 1 SD of both originals, confirmed on 10 seeds
+  (`scripts/fig4_cm16_confirm.py`): **Cm 16 pF, gSK 12.5, gA 14 -> 4.34 +- 0.21 spikes,
+  9.01 +- 0.66 ms, delay 1.64 ms, 78/120 RA meet the criterion** (final config: 114).
+  gSK and gA are at the top of the Fig 13 ranges.
+- **Delay between neighbouring bursts:** 1.96 ms (Cm 20) -> 1.64 (Cm 16) -> 1.27-1.36 (Cm 12-13).
+  The original is inconsistent (inset "5 ms", raster ~1.4 ms; I-18).
+- **Conclusion (reported, not adopted):** within the published ranges, burst size, duration and
+  the share of criterion-meeting RA cannot all match; a smaller (unreported) RA capacitance moves
+  the model towards the original at the cost of the criterion. The article keeps the frozen
+  final configuration (Cm 20 pF) for all figures and reports Cm 16 as a sensitivity result.
+  Figure: `figures/article_fig4_tradeoff.png` (`scripts/fig4_tradeoff_plot.py`).

@@ -1,0 +1,15 @@
+{"name": "baseline", "propagates": true, "spikes": 4.0, "dur": 8.486, "isi": 2.828666666666666}
+{"name": "tau_n 7.5", "propagates": true, "spikes": 3.0, "dur": 5.498, "isi": 2.749}
+{"name": "tau_n 5.0", "propagates": true, "spikes": 4.0, "dur": 8.346000000000002, "isi": 2.782000000000001}
+{"name": "tau_n 3.0", "propagates": true, "spikes": 4.0, "dur": 9.298000000000002, "isi": 3.099333333333334}
+{"name": "tau_h 0.5", "propagates": true, "spikes": 6.0, "dur": 13.845999999999998, "isi": 2.769199999999999}
+{"name": "tau_h 2.0", "propagates": true, "spikes": 3.0, "dur": 6.624, "isi": 3.312}
+{"name": "Cm 15.0", "propagates": true, "spikes": 5.0, "dur": 9.764000000000003, "isi": 2.4410000000000007}
+{"name": "Cm 10.0", "propagates": true, "spikes": 7.0, "dur": 12.394, "isi": 2.065666666666666}
+{"name": "gK 250.0", "propagates": true, "spikes": 4.0, "dur": 8.862, "isi": 2.954}
+{"name": "gK 400.0", "propagates": true, "spikes": 4.0, "dur": 10.130000000000003, "isi": 3.3766666666666674}
+{"name": "gNa 400.0", "propagates": true, "spikes": 5.0, "dur": 10.914000000000003, "isi": 2.728500000000001}
+{"name": "gNa 600.0", "propagates": true, "spikes": 7.0, "dur": 16.728, "isi": 2.788}
+{"name": "alpha_h_offset 50 [Daou13 code]", "propagates": true, "spikes": 3.0, "dur": 5.845999999999998, "isi": 2.922999999999999}
+{"name": "RTF 26.7 [Daou13 code]", "propagates": true, "spikes": 4.0, "dur": 8.498, "isi": 2.832666666666666}
+{"name": "tau_n constant 10 [BD eq]", "propagates": true, "spikes": 1.0, "dur": 0.0, "isi": NaN}
