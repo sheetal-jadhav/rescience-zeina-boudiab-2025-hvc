@@ -239,3 +239,61 @@ New or sharpened items (reported as open in the article):
   - So individual X/INT spike trains, and per-seed RA burst statistics in such networks, are
     not reproducible spike for spike. Comparisons must be statistical, across seeds
     (`code/scripts/brian2_vs_paper.py`).
+
+## Fig 2 as single cells: stated protocol vs Mooney & Prather protocol (2026-11-22)
+- **I-24:** at the stimulus the paper states for the *model* (0.5 nA: 10 ms pulses; a 500 ms step
+  in D2; "same values used as by Mooney and Prather"), our stimulated cells fire more than the
+  original model column of Fig 2:
+  - RA: 3 spikes per pulse (original 1); INT: 2 per pulse (original 1); X: 1 (original 1).
+  - D2 INT: 89 spikes, 178 Hz (original: 50 spikes over ~820 ms, ~60 Hz, measured from the
+    figure; the drawn step lasts ~820 ms, not the stated 500 ms).
+- **Not a bug, and not I_KNa** (`code/scripts/fig2_cell_excitability.py`, a Python port of the
+  authors' Figure 2 Source Code 3-4, validated: with our parameters it gives our 3 spikes and
+  ~180 Hz):
+  - their own INT cell fires 176 Hz at 0.5 nA, like ours; no INT parameter changes this;
+  - their own RA cell (Daou13 values, gA 150) does not fire at all to 0.5 nA x 10 ms (peaks at
+    -43 mV); removing I_KNa / I_NaP changes nothing; gA alone decides: 3 spikes for gA 9-40
+    (published range 1-14), 1 spike only near gA 80-90;
+  - so neither the published parameters nor the supplied code produce the published Fig 2 at
+    the stated current.
+- **Mooney & Prather (2005) Methods:** "brief (~10 ms) depolarizing current pulses (+0.5 to 1
+  nA)", and "current amplitudes and/or the resting membrane potential of the trigger cell were
+  adjusted to elicit only a single action potential per pulse"; long steps "0.5 s at +0.5 nA".
+- **Holding current alone does not work for RA:** 0 to -60 pA (rest -74 to -98 mV): always 3
+  spikes at 0.5 nA. INT reaches 1 spike at -80 pA (rest -88 mV; M&P's C1 INT is at -85 mV).
+- **Decision (user, 2026-11-22): report both protocols** (`code/scripts/fig2_single_cells.py`,
+  `figures/replication_fig2_single.png`):
+  - *Stated:* 0.5 nA throughout -> not reproduced (numbers above).
+  - *M&P procedure* [ours]: pulse amplitude = middle of our cell's one-spike range for a 10 ms
+    pulse (RA 110-200 -> 150 pA; INT 130-370 -> 250 pA; X >= 190 -> 500 pA unchanged); D2 step
+    145 pA for 820 ms (gives the figure's ~60 Hz). -> RA 1 spike + after-depolarization, INT 1,
+    X 1, D2 49 spikes at 60 Hz: matches the original model column. Below the 0.5-1 nA range,
+    which we attribute to our cells' higher input resistance (RA: 20 pF, 2 nS leak at rest).
+  - Pulse spacing corrected to the original panels: A 100, B 115 (was 60), C 190 (was 150),
+    E 100 ms.
+- **Also measured from the original model column (for the later pair calibration, I-19/I-23):**
+  A2 X IPSP ~4.7 mV; B2 first INT EPSP ~6.5 mV, subthreshold, spike on the second; C2 X IPSP
+  ~4 mV; D2 X ~4.7-5 mV below rest; E2 INT spikes once per X spike.
+- **Their code's own protocols** (`figures/fig2_code_protocols.png`): INT +75 pA identical (31 Hz
+  both); X +150 pA: ours 54 Hz vs 25 Hz (their X has gK 50, gSK 6, gKNa 40); RA +200 pA: ours
+  82 Hz vs their delayed 10 Hz (gA). Source Code 2 (X, -120 pA) uses gK 1700, gSK 1 (INT values).
+
+## Fig 2 pairs with calibrated synapses (2026-11-22; `code/scripts/fig2_pairs_mp.py`)
+- Paper: "we connected one HVC(RA) neuron to excite one HVC(INT) ... connected with one HVC(X) via
+  a GABA current"; "synaptic parameters were calibrated" (by eye, I-23; values not reported, I-19).
+- **Fitted to the original model column** (presynaptic cell under the M&P procedure; settled cells):
+  - INT->X **10 nS** (network 21): C2 X IPSP 4.1 mV (target 4.0; 0.40 mV/nS, linear).
+  - X->INT **11 nS** (network 21): one INT spike per X spike for 6.5-16 nS; 2 spikes from 18 nS.
+  - RA->INT **25 nS** for A2 (one INT spike per RA spike for 16-35 nS) and **7.4 nS** for B2
+    (EPSP 6.6 mV, target 6.5, subthreshold). Two values because A2 needs a suprathreshold and B2
+    a subthreshold RA->INT pair; Mooney & Prather report both kinds (their Fig 4A).
+- **Predictions (not fitted), M&P procedure:** A2 X IPSP 3.7-4.2 mV (target ~4.7, ~20% low);
+  D2 X held -5.2 mV with a ripple at each INT spike (target 4.7-5 mV, ripple as in original).
+- **Not reproduced:** B2's spike on the second pulse (identical pulses on a settled cell give
+  identical subthreshold EPSPs; starting unsettled, as their code does, makes INT fire on the
+  *first* pulse instead); D2: X fires one rebound spike 66 ms after the step (original: none in
+  the ~100 ms drawn); C2: no post-spike depolarising hump in INT.
+- **Stated 0.5 nA with the same synapses:** RA bursts of 3 -> A2 X IPSPs ~6 mV; B2 INT fires on
+  every pulse; C2 X IPSP 6.4 mV (2 INT spikes); D2 X -10.5 mV and a 5-spike rebound burst.
+- Figure: `figures/replication_fig2_pairs.png` (left stated, right M&P), replaces the single-cell
+  figure in the article. Each trace has its own scale bar as in the original.

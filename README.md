@@ -45,6 +45,10 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 sh code/scripts/run_final.sh                 # calibration, robustness, Figs 5, 6, 9, 11 (hours)
 cd code && ../.venv/bin/python -I scripts/fig12.py && ../.venv/bin/python -I scripts/fig13_fine_rara.py
 ../.venv/bin/python -I scripts/fig2_pairs.py && ../.venv/bin/python -I scripts/article_figures.py
+# Fig 2 (article version): stated 0.5 nA vs the Mooney & Prather one-spike procedure
+../.venv/bin/python -I scripts/fig2_pairs_mp.py         # pairs with fitted synapses (article Fig 2)
+../.venv/bin/python -I scripts/fig2_single_cells.py     # stimulated cells alone; authors' code protocols
+../.venv/bin/python -I scripts/fig2_cell_excitability.py  # port of the authors' Fig 2 cell code
 ../.venv/bin/python -I scripts/make_figures.py
 ../.venv/bin/python -I scripts/daou13_xcell.py   # needs Daou 2013 XPP files in reference/
 ```

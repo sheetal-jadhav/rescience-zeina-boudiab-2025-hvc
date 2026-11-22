@@ -82,6 +82,43 @@ no sampled configuration met the HVC\textsubscript{X} criterion.
 Figures~\ref{fig:2}--\ref{fig:13} are laid out like the original Figures~2 and 4--13. Neuron
 indices refer to our network instance.
 
+\subsection*{Fig.~2 matches only with the Mooney \& Prather procedure and fitted pair synapses}
+We simulated the stimulated cell of each Fig.~2 panel on its own, with two protocols
+(Fig.~\ref{fig:2}). With the stimulus stated for the model (0.5\,nA, 10\,ms pulses; a 0.5\,nA,
+500\,ms step in D), HVC\textsubscript{RA} fired 3 spikes per pulse and interneurons 2, against one
+each in the original, and the interneuron in D fired at 178\,Hz, against $\sim$60\,Hz (50 spikes
+over the $\sim$820\,ms step drawn in the original; the text says 500\,ms). This is not specific to
+our implementation. A Python port of the authors' own Fig.~2 cell code gives the same 176\,Hz
+interneuron, and its HVC\textsubscript{RA} cell does not fire at all to the stated pulse. Removing
+$I_{KNa}$ and $I_{NaP}$, which that code contains and the article excludes, changes neither result.
+For HVC\textsubscript{RA} the A-type conductance decides the spike count: one spike needs
+$g_A\approx 80$--90\,nS, outside the published range of 1--14\,nS.
+
+Mooney and Prather adjusted the current or the resting potential of the stimulated cell
+``to elicit only a single action potential per pulse''\supercite{MooneyPrather2005}. A holding
+current cannot do this for our HVC\textsubscript{RA} (3 spikes from $-74$ to $-98$\,mV), so we
+adjusted the amplitude, taking the middle of each cell's one-spike range: 150\,pA for
+HVC\textsubscript{RA}, 250\,pA for interneurons, and 500\,pA for HVC\textsubscript{X}, which needs
+no change. For D we used 145\,pA for 820\,ms. With this procedure every stimulated cell fires one
+spike per pulse, HVC\textsubscript{RA} with the small after-depolarisation seen in the original,
+and the interneuron in D fires 49 spikes at 60\,Hz. These amplitudes are below the 0.5--1\,nA used
+in slices, which we attribute to the higher input resistance of the model cells.
+
+The pair conductances of Fig.~2 were calibrated by eye and are not reported. We fitted them to
+the original model traces, measured with their scale bars: INT$\to$X 10\,nS (IPSP 4.1\,mV, target
+4.0), X$\to$INT 11\,nS (one interneuron spike per HVC\textsubscript{X} spike), and RA$\to$INT
+25\,nS in A (one interneuron spike per HVC\textsubscript{RA} spike) but 7.4\,nS in B (a
+subthreshold 6.6\,mV EPSP, target 6.5). A and B need different RA$\to$INT strengths, as in Mooney
+and Prather's own sub- and suprathreshold pairs. The network uses 21--27\,nS for the same
+connections. Two traces were not fitted and serve as tests: the disynaptic IPSP in A is
+3.7--4.2\,mV (target $\sim$4.7) and the HVC\textsubscript{X} hyperpolarisation in D is 5.2\,mV
+(target 4.7--5), with the same ripple at each interneuron spike (Fig.~\ref{fig:2}, right). Three
+features are not reproduced: the interneuron spike on the second pulse in B (identical pulses on a
+settled cell give identical EPSPs), the absence of an HVC\textsubscript{X} rebound spike after the
+step in D (ours fires one, 66\,ms after the step), and a small depolarisation after each
+interneuron spike in C. With the stated 0.5\,nA and the same synapses, the extra presynaptic spikes
+roughly double the postsynaptic responses (Fig.~\ref{fig:2}, left).
+
 \subsection*{Sequence propagation is reproduced (Fig.~4)}
 In 50 of 50 random network instances, activity propagated through all 120
 HVC\textsubscript{RA} in chain order (Fig.~\ref{fig:4}). Bursts had $3.93\pm0.12$ spikes and
@@ -206,7 +243,8 @@ interneurons do not reproduce from the published description:
 \begin{itemize}
 \item HVC\textsubscript{X} rebound bursts (Figs.~7B, 10);
 \item dense interneuron bursting (Figs.~7A, 8);
-\item the paired-recording calibration (Fig.~2);
+\item Fig.~2 at the stated 0.5\,nA (it matches, apart from three details, only when the current is
+  adjusted as in Mooney \& Prather and the unreported pair conductances are fitted);
 \item the fragility of the sequence to single-neuron changes in interneurons and
   HVC\textsubscript{X} (Figs.~9, 11, 12).
 \end{itemize}
@@ -255,11 +293,14 @@ HVC\textsubscript{X} rebound bursting is specified and validated against slice r
 
 % ------------------------------------------------------------------ figures
 \begin{figure}[p]\centering
-\includegraphics[width=0.45\linewidth]{figures/replication_fig2.png}
-\caption{(cf.\ original Fig.~2, right column) Model pair and triplet responses to 10\,ms,
-0.5\,nA pulses (A, B, C, E) or a 500\,ms, 0.5\,nA step (D), using network-strength synapses. PSPs
-are 3--5$\times$ larger than in Mooney \& Prather\supercite{MooneyPrather2005}, and the
-excitatory ones reach threshold; the original pair conductances are not reported.}
+\includegraphics[width=0.9\linewidth]{figures/replication_fig2_pairs.png}
+\caption{(cf.\ original Fig.~2, right column) Model pairs and the RA$\to$INT$\to$X triplet (A; the
+interneuron is not drawn), with synaptic conductances fitted to the original traces. In each
+panel the bottom trace is the stimulated cell. Left: the stated stimulus, 0.5\,nA (10\,ms pulses in
+A, B, C, E; a 500\,ms step in D). Right: the current adjusted to give one spike per pulse, as in
+Mooney \& Prather\supercite{MooneyPrather2005} (HVC\textsubscript{RA} 150\,pA, interneuron
+250\,pA, HVC\textsubscript{X} 500\,pA; D: 145\,pA for 820\,ms). Pulse spacing and per-trace scale
+bars as in the original panels. Postsynaptic spikes taller than three scale bars are truncated.}
 \label{fig:2}\end{figure}
 
 \begin{figure}[p]\centering
