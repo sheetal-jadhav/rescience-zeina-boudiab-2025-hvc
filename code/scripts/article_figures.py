@@ -380,7 +380,7 @@ if __name__ == "__main__":
         net, r, sp = simulate(seed=0, per_neuron={attr[key]: {idx: ("mul", float(factor))}}, **kw)
         out[key] = (net, {"t": r["t"], "V": r["V"]}, sp)
     base = out["base"]
-    fig2(); fig4(base); fig5(); fig6(out, picks); fig7(base); fig8(base); fig9(out, picks)
+    fig2(); fig5(); fig6(out, picks); fig7(base); fig8(base); fig9(out, picks)  # Fig 4: scripts/fig4_article.py
     fig10(base); fig11(out, picks)
     # rebuild the Fig 12 example with the same per-neuron X draws as fig12.job (same RNG order)
     k = ex["run"]

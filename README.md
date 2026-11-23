@@ -53,7 +53,7 @@ cd code && ../.venv/bin/python -I scripts/fig12.py && ../.venv/bin/python -I scr
 ../.venv/bin/python -I scripts/fig4_mp_test.py && ../.venv/bin/python -I scripts/fig4_burst_isi.py
 ../.venv/bin/python -I scripts/fig4_cm_grid.py && ../.venv/bin/python -I scripts/fig4_cm_network.py
 ../.venv/bin/python -I scripts/fig4_cm_network_grid.py && ../.venv/bin/python -I scripts/fig4_cm16_confirm.py
-../.venv/bin/python -I scripts/fig4_tradeoff_plot.py
+../.venv/bin/python -I scripts/fig4_tradeoff_plot.py && ../.venv/bin/python -I scripts/fig4_article.py  # article Fig 4
 ../.venv/bin/python -I scripts/make_figures.py
 ../.venv/bin/python -I scripts/daou13_xcell.py   # needs Daou 2013 XPP files in reference/
 ```
